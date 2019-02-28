@@ -992,4 +992,10 @@ def drawevent(selection,radio,frame):
 if __name__ == '__main__':
     app.run_server(debug=True)
 
+
+
+                if radio=='3D':
+                        [traceB,traceD0,tracetau,tracenuB,traceK]=[go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B) ,colorscale='Blackbody',width = 3,cmin=cmin,cmax=cmax)),go.Scatter3d(x=[B_X,D0_X],y=[B_Y,D0_Y],z=[B_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0),colorscale='Blackbody',cmin=cmin,cmax=cmax)),go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),colorscale='Blackbody',width = 3,cmin=cmin,cmax=cmax)),go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),colorscale='Blackbody',width = 3,cmin=cmin,cmax=cmax)),go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),colorscale='Blackbody',width = 3,cmin=cmin,cmax=cmax))]
+                        tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),colorscale='Blackbody',width = 3,cmin=cmin,cmax=cmax))
+
                                                                                                                                                                                 
