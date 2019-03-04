@@ -31,7 +31,8 @@ import plotly.plotly as py
 import plotly.tools as tls
 from plotly.graph_objs import Data, Layout, Figure
 from plotly.graph_objs import Scatter
-from functions import change_frame,calc_angles,particles
+from functions import change_frame,calc_angles,particles,calc_xrange,calc_yrange,calc_zrange,com,coordinates
+
 
 
 
@@ -147,14 +148,27 @@ def change_frame(COM,filename):
 
 
 
-def calc_angles(df):
-    nouvtau=tau.boost(-(tau+nuB).boostp3)
-    nouvnu=nuB.boost(-(tau+nuB).boostp3)
-    unittau=(nouvtau.p3).unit
-    unitnu=(nouvnu.p3).unit
-    nnewtau=tau.boost(-B.boostp3)
-    unitau=nnewtau.unit
-    if df=='dh_D0':
+def calc_angles(filename):    
+    if filename=='dh_D0':
+        particle_list=particles(filename)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+
+
+    elif filename=='dh_Dst':
+        particle_list=particles(filename)
+        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
+
+    elif filename=='dh_2420' or filename=='dh_2460':
+        particle_list=particles(filename)
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+
+    if filename=='dh_D0':
+        nouvtau=tau.boost(-(tau+nuB).boostp3)
+        nouvnu=nuB.boost(-(tau+nuB).boostp3)
+        unittau=(nouvtau.p3).unit
+        unitnu=(nouvnu.p3).unit
+        nnewtau=tau.boost(-B.boostp3)
+        unitau=nnewtau.unit
         nouvpi=piD0.boost(-(piD0+K).boostp3)
         nouvK=K.boost(-(piD0+K).boostp3)
         nouvD0=D0.boost(-B.boostp3)
@@ -175,7 +189,13 @@ def calc_angles(df):
         chi = np.arctan2(si,co)
 
         angles=[costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]
-    if df=='dh_Dst':
+    if filename=='dh_Dst':
+        nouvtau=tau.boost(-(tau+nuB).boostp3)
+        nouvnu=nuB.boost(-(tau+nuB).boostp3)
+        unittau=(nouvtau.p3).unit
+        unitnu=(nouvnu.p3).unit
+        nnewtau=tau.boost(-B.boostp3)
+        unitau=nnewtau.unit
         nouvpi=piDst.boost(-(piDst+D0).boostp3)
         nouvD0=D0.boost(-(piDst+D0).boostp3)
         nouvDst=D0.boost(-B.boostp3)
@@ -195,8 +215,13 @@ def calc_angles(df):
 
         angles=[costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]
         
-    if df=='dh_2460' or df=='dh_2420':
-        
+    if filename=='dh_2460' or filename=='dh_2420':
+        nouvtau=tau.boost(-(tau+nuB).boostp3)
+        nouvnu=nuB.boost(-(tau+nuB).boostp3)
+        unittau=(nouvtau.p3).unit
+        unitnu=(nouvnu.p3).unit
+        nnewtau=tau.boost(-B.boostp3)
+        unitau=nnewtau.unit
         nouvpi=piDstst.boost(-(piDstst+Dst).boostp3)
         nouvDst=D0.boost(-(piDstst+Dst).boostp3)
         nouvDstst=Dstst.boost(-B.boostp3)
@@ -870,13 +895,13 @@ def plot_phase_space(rangest,rangel,rangechi,filename):
         df=dh_Dst
         particle_list=particles(filename)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_Dst)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         df=dh_2420
         particle_list=particles(filename)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
