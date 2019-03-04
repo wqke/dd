@@ -31,12 +31,12 @@ import plotly.plotly as py
 import plotly.tools as tls
 from plotly.graph_objs import Data, Layout, Figure
 from plotly.graph_objs import Scatter
-
+from functions import change_frame,calc_angles,particles
 
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__)#, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 app.css.append_css({'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
 server = app.server
 
@@ -81,65 +81,132 @@ styles = {
 
 
 def particles(df):
-    B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
-    W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
-    D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-    tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
-    nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
-    K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
-    piD0=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
-    pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
-    pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
-    pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
-    nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
-    particle_list=[B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]
+    if df==dh_D0:
+        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
+        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
+        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
+        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
+        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
+        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
+        piD0=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
+        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
+        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
+        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
+        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
+        particle_list=[B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]
+ 
+    elif df==dh_Dst:
+        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
+        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
+        Dst=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
+        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
+        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
+        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
+        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
+        piDst=LorentzVector(df['Dst_Pi_PX_TRUE'],df['Dst_Pi_PY_TRUE'],df['Dst_Pi_PZ_TRUE'],df['Dst_Pi_E_TRUE'])
+        piK=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
+        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
+        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
+        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
+        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
+        particle_list=[B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]
+    elif df==dh_2460 or df==dh_2420:
+        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
+        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
+        Dstst=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])
+        Dst=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
+        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
+        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
+        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
+        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
+        piDst=LorentzVector(df['Dst_Pi_PX_TRUE'],df['Dst_Pi_PY_TRUE'],df['Dst_Pi_PZ_TRUE'],df['Dst_Pi_E_TRUE'])
+        piDstst=LorentzVector(df['Dstst_Pi_PX_TRUE'],df['Dstst_Pi_PY_TRUE'],df['Dstst_Pi_PZ_TRUE'],df['Dstst_Pi_E_TRUE'])
+        piD0=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
+        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
+        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
+        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
+        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
+        particle_list=[B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]      
     return particle_list
 
-def change_frame(COM):
-    newB=B.boost(-COM.boostp3)
-    newtau=tau.boost(-COM.boostp3)
-    newD0=D0.boost(-COM.boostp3)
-    newnuB=nuB.boost(-COM.boostp3)
-    newK=K.boost(-COM.boostp3)
-    newpiD0=piD0.boost(-COM.boostp3)
-    newpitau1=pitau1.boost(-COM.boostp3)
-    newpitau2=pitau2.boost(-COM.boostp3)
-    newpitau3=pitau3.boost(-COM.boostp3)
-    res=[newB,newtau,newD0,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]
+def change_frame(COM,df):
+    res=[]
+    list_particles=particles(df)
+    for i in range(len(list_particles)):
+        newvec=list_particles[i].boost(-COM.boostp3)
+        res.append(newvec)
     return res
 
 
-def calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau):
+
+def calc_angles(df):
     nouvtau=tau.boost(-(tau+nuB).boostp3)
     nouvnu=nuB.boost(-(tau+nuB).boostp3)
-    nouvpi=piD0.boost(-(piD0+K).boostp3)
-    nouvK=K.boost(-(piD0+K).boostp3)
-    nouvD0=D0.boost(-B.boostp3)
     unittau=(nouvtau.p3).unit
     unitnu=(nouvnu.p3).unit
-    unitD0=(nouvD0.p3).unit
-    unitK=(nouvK.p3).unit
-    costhetast=unitD0.dot(unitK)
-    costhetal=unitD0.dot(unittau)
-
     nnewtau=tau.boost(-B.boostp3)
-    nnewD0=D0.boost(-B.boostp3)
     unitau=nnewtau.unit
-    uniD0=nnewD0.unit
+    if df==dh_D0:
+        nouvpi=piD0.boost(-(piD0+K).boostp3)
+        nouvK=K.boost(-(piD0+K).boostp3)
+        nouvD0=D0.boost(-B.boostp3)
+        unitD0=(nouvD0.p3).unit
+        unitK=(nouvK.p3).unit
+        costhetast=unitD0.dot(unitK)
+        costhetal=unitD0.dot(unittau)
+        nnewD0=D0.boost(-B.boostp3)
+        uniD0=nnewD0.unit
+        nnormal1=unitD0.cross(unitK)
+        normal1=nnormal1.unit
+        nnormal2=unitD0.cross(unitau)
+        normal2=nnormal2.unit
+        pparallel=normal1.cross(unitD0)
+        parallel=pparallel.unit
+        co = normal1.dot(normal2)
+        si = parallel.dot(normal2)
+        chi = np.arctan2(si,co)
 
-    nnormal1=unitD0.cross(unitK)
-    normal1=nnormal1.unit
+        angles=[costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]
+    if df==dh_Dst:
+        nouvpi=piDst.boost(-(piDst+D0).boostp3)
+        nouvD0=D0.boost(-(piDst+D0).boostp3)
+        nouvDst=D0.boost(-B.boostp3)
+        unitDst=(nouvDst.p3).unit
+        unitD0=(nouvD0.p3).unit
+        nnewD0=D0.boost(-B.boostp3)
+        uniD0=nnewD0.unit
+        nnormal1=unitDst.cross(uniD0)
+        normal1=nnormal1.unit
+        nnormal2=unitDst.cross(unitau)
+        normal2=nnormal2.unit
+        pparallel=normal1.cross(unitDst)
+        parallel=pparallel.unit
+        co = normal1.dot(normal2)
+        si = parallel.dot(normal2)
+        chi = np.arctan2(si,co)
 
-    nnormal2=unitD0.cross(unitau)
-    normal2=nnormal2.unit
+        angles=[costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]
+        
+    if df==dh_2460 or df==dh_2420:
+        nouvpi=piDstst.boost(-(piDstst+Dst).boostp3)
+        nouvDst=D0.boost(-(piDstst+Dst).boostp3)
+        nouvDstst=Dstst.boost(-B.boostp3)
+        unitDstst=(nouvDstst.p3).unit
+        unitDst=(nouvDst.p3).unit
+        nnewDst=Dst.boost(-B.boostp3)
+        uniDst=nnewDst.unit
+        nnormal1=unitDstst.cross(uniDst)
+        normal1=nnormal1.unit
+        nnormal2=unitDstst.cross(unitau)
+        normal2=nnormal2.unit
+        pparallel=normal1.cross(unitDstst)
+        parallel=pparallel.unit
+        co = normal1.dot(normal2)
+        si = parallel.dot(normal2)
+        chi = np.arctan2(si,co)
 
-    pparallel=normal1.cross(unitD0)
-    parallel=pparallel.unit
+        angles=[costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]
 
-    co = normal1.dot(normal2)
-    si = parallel.dot(normal2)
-    chi = np.arctan2(si,co)
-    angles=[costhetast,costhetal,chi]
     return angles
 
 
@@ -286,9 +353,8 @@ app.layout = html.Div(children=[
                         'font-size': '1.5rem',
                         'color': '#4D637F'}),
         dcc.Dropdown(
-                    options=[{'label': 'Show theta* (D0 frame)', 'value': 'D0'},
-                                        {'label': 'Show theta_l (W frame)', 'value': 'W'},
-                                        {'label': 'Show chi (B frame)', 'value': 'B'},
+                    options=[{'label': 'Show theta* ', 'value': 'D0'},
+                                        {'label': 'Show theta_l ', 'value': 'W'},
                                         {'label': 'Show theta* and theta_l', 'value': 'two'}],
                         value='D0',
                         id='dropdown-angle'
@@ -320,7 +386,7 @@ app.layout = html.Div(children=[
                 dcc.Dropdown(
                     options=[{'label': 'Lab', 'value': 'lab'},
                                         {'label': 'COM of B', 'value': 'B'},
-                                        {'label': 'COM of D0', 'value': 'D0'},
+                                        {'label': 'COM of (B-W)', 'value': 'D0'},
                                         {'label': 'COM of W', 'value': 'W'}],
 
                         value='lab',
@@ -373,33 +439,32 @@ Output('show-angle', 'figure'),
 Input('dropdown-angle','value'),
 Input('dropdown-file','value')])
 
-
-
-
 def drawangle(selection,choice,filename):
+
     if filename=='dh_D0':
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_D0)
+        [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         particle_list=particles(dh_Dst)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_Dst)
+        [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         particle_list=particles(dh_2420)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_2420)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         particle_list=particles(dh_2460)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_2460)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
+        
 
     if selection is None:
         return {}
@@ -634,30 +699,31 @@ def update_output3(value):
         Input('choose-chi', 'value'),
         Input('dropdown-file','value')])
 def plot_phase_space(rangest,rangel,rangechi,filename):
+
     if filename=='dh_D0':
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_D0)
+        [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         particle_list=particles(dh_Dst)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_Dst)
+        [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         particle_list=particles(dh_2420)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_2420)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         particle_list=particles(dh_2460)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
-
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_2460)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
+        
 
     layout1=go.Layout(
         hovermode = 'closest',
@@ -697,30 +763,32 @@ def plot_phase_space(rangest,rangel,rangechi,filename):
 Output('histog', 'figure'),
 [Input('dropdown-dist','value'),
 Input('dropdown-file','value')])
+
 def drophist(choice,filename):
     if filename=='dh_D0':
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_D0)
+        [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         particle_list=particles(dh_Dst)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_Dst)
+        [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         particle_list=particles(dh_2420)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_2420)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         particle_list=particles(dh_2460)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles    
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_2460)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
+        
     if choice=='chid':
         return {'data':[go.Histogram(x=chi)],'layout':{'title':'chi','paper_bgcolor' : '#F4F4F8', 'plot_bgcolor' : '#F4F4F8'}}
     if choice=='std':
@@ -745,29 +813,31 @@ Input('which-D','value'),
 Input('dropdown-frame','value'),
 Input('dropdown-file','value')])
 def drawevent(selection,radio,frame,filename):
+
     if filename=='dh_D0':
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_D0)
+        [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         particle_list=particles(dh_Dst)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_Dst)
+        [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         particle_list=particles(dh_2420)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        angles=calc_angles(dh_2420)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         particle_list=particles(dh_2460)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
-        [costhetast,costhetal,chi]=angles
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(dh_2460)
+        [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
+        
 
     if selection is None:
         return {}
@@ -827,7 +897,7 @@ def drawevent(selection,radio,frame,filename):
                 else:
 
                     COM=LorentzVector(df[frame+'_PX_TRUE'],df[frame+'_PY_TRUE'],df[frame+'_PZ_TRUE'],df[frame+'_E_TRUE'])
-                    liste_part=change_frame(COM)
+                    liste_part=change_frame(COM,df)
 
                     [newB,newtau,newD0,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
                     PV_X,PV_Y,PV_Z=(0,0,0)
