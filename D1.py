@@ -35,11 +35,13 @@ from functions import change_frame,calc_angles,particles,calc_xrange,calc_yrange
 
 
 
+styles = {
+    'pre': {
+        'border': 'thin lightgrey solid',
+        'overflowX': 'scroll'
+    }
+}
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__)
-app.css.append_css({'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
-server = app.server
 
 
 dht_D0=root_pandas.read_root('model_BplusD0.root',key='DecayTree')
@@ -69,316 +71,15 @@ dht_2420['W_PX_TRUE']=dht_2420['B_PX_TRUE']-dht_2420['Dstst_PX_TRUE']
 dht_2420['W_PY_TRUE']=dht_2420['B_PY_TRUE']-dht_2420['Dstst_PY_TRUE']
 dht_2420['W_PZ_TRUE']=dht_2420['B_PZ_TRUE']-dht_2420['Dstst_PZ_TRUE']
 dht_2420['W_E_TRUE']=dht_2420['B_E_TRUE']-dht_2420['Dstst_E_TRUE']
-dh_2420=dht_2460.head(100)
+dh_2420=dht_2420.head(100)
 
 
 
-styles = {
-    'pre': {
-        'border': 'thin lightgrey solid',
-        'overflowX': 'scroll'
-    }
-}
-
-
-def particles(filename):
-    if filename=='dh_D0':
-        df=dh_D0
-    if filename=='dh_Dst':
-        df=dh_Dst
-    if filename=='dh_2460':
-        df=dh_2460
-    if filename=='dh_2420':
-        df=dh_2420
-    if filename=='dh_D0':
-        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
-        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
-        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
-        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
-        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
-        piD0=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
-        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
-        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
-        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
-        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
-        particle_list=[B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]
- 
-    elif filename=='dh_Dst':
-        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
-        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
-        Dst=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
-        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
-        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
-        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
-        piDst=LorentzVector(df['Dst_Pi_PX_TRUE'],df['Dst_Pi_PY_TRUE'],df['Dst_Pi_PZ_TRUE'],df['Dst_Pi_E_TRUE'])
-        piK=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
-        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
-        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
-        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
-        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
-        particle_list=[B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]
-    elif filename=='dh_2460' or filename=='dh_2420':
-        B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
-        W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
-        Dstst=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])
-        Dst=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
-        tau=LorentzVector(df['Tau_PX_TRUE'],df['Tau_PY_TRUE'],df['Tau_PZ_TRUE'],df['Tau_E_TRUE'])
-        D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-        nuB=LorentzVector(df['B_nu_PX_TRUE'],df['B_nu_PY_TRUE'],df['B_nu_PZ_TRUE'],df['B_nu_E_TRUE'])
-        K=LorentzVector(df['D0_K_PX_TRUE'],df['D0_K_PY_TRUE'],df['D0_K_PZ_TRUE'],df['D0_K_E_TRUE'])
-        piDst=LorentzVector(df['Dst_Pi_PX_TRUE'],df['Dst_Pi_PY_TRUE'],df['Dst_Pi_PZ_TRUE'],df['Dst_Pi_E_TRUE'])
-        piDstst=LorentzVector(df['Dstst_Pi_PX_TRUE'],df['Dstst_Pi_PY_TRUE'],df['Dstst_Pi_PZ_TRUE'],df['Dstst_Pi_E_TRUE'])
-        piD0=LorentzVector(df['D0_Pi_PX_TRUE'],df['D0_Pi_PY_TRUE'],df['D0_Pi_PZ_TRUE'],df['D0_Pi_E_TRUE'])
-        pitau1=LorentzVector(df['Tau_Pi1_PX_TRUE'],df['Tau_Pi1_PY_TRUE'],df['Tau_Pi1_PZ_TRUE'],df['Tau_Pi1_E_TRUE'])
-        pitau2=LorentzVector(df['Tau_Pi2_PX_TRUE'],df['Tau_Pi2_PY_TRUE'],df['Tau_Pi2_PZ_TRUE'],df['Tau_Pi2_E_TRUE'])
-        pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
-        nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
-        particle_list=[B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]      
-    return particle_list
-
-def change_frame(COM,filename):
-    res=[]
-    list_particles=particles(filename)
-    for i in range(len(list_particles)):
-        newvec=list_particles[i].boost(-COM.boostp3)
-        res.append(newvec)
-    return res
-
-
-
-def calc_angles(filename):    
-    if filename=='dh_D0':
-        particle_list=particles(filename)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-
-
-    elif filename=='dh_Dst':
-        particle_list=particles(filename)
-        [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
-
-    elif filename=='dh_2420' or filename=='dh_2460':
-        particle_list=particles(filename)
-        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-
-    if filename=='dh_D0':
-        nouvtau=tau.boost(-(tau+nuB).boostp3)
-        nouvnu=nuB.boost(-(tau+nuB).boostp3)
-        unittau=(nouvtau.p3).unit
-        unitnu=(nouvnu.p3).unit
-        nnewtau=tau.boost(-B.boostp3)
-        unitau=nnewtau.unit
-        nouvpi=piD0.boost(-(piD0+K).boostp3)
-        nouvK=K.boost(-(piD0+K).boostp3)
-        nouvD0=D0.boost(-B.boostp3)
-        unitD0=(nouvD0.p3).unit
-        unitK=(nouvK.p3).unit
-        costhetast=unitD0.dot(unitK)
-        costhetal=unitD0.dot(unittau)
-        nnewD0=D0.boost(-B.boostp3)
-        uniD0=nnewD0.unit
-        nnormal1=unitD0.cross(unitK)
-        normal1=nnormal1.unit
-        nnormal2=unitD0.cross(unitau)
-        normal2=nnormal2.unit
-        pparallel=normal1.cross(unitD0)
-        parallel=pparallel.unit
-        co = normal1.dot(normal2)
-        si = parallel.dot(normal2)
-        chi = np.arctan2(si,co)
-
-        angles=[costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]
-    if filename=='dh_Dst':
-        nouvtau=tau.boost(-(tau+nuB).boostp3)
-        nouvnu=nuB.boost(-(tau+nuB).boostp3)
-        unittau=(nouvtau.p3).unit
-        unitnu=(nouvnu.p3).unit
-        nnewtau=tau.boost(-B.boostp3)
-        unitau=nnewtau.unit
-        nouvpi=piDst.boost(-(piDst+D0).boostp3)
-        nouvD0=D0.boost(-(piDst+D0).boostp3)
-        nouvDst=D0.boost(-B.boostp3)
-        unitDst=(nouvDst.p3).unit
-        unitD0=(nouvD0.p3).unit
-        nnewD0=D0.boost(-B.boostp3)
-        uniD0=nnewD0.unit
-        nnormal1=unitDst.cross(uniD0)
-        normal1=nnormal1.unit
-        nnormal2=unitDst.cross(unitau)
-        normal2=nnormal2.unit
-        pparallel=normal1.cross(unitDst)
-        parallel=pparallel.unit
-        co = normal1.dot(normal2)
-        si = parallel.dot(normal2)
-        chi = np.arctan2(si,co)
-
-        angles=[costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]
-        
-    if filename=='dh_2460' or filename=='dh_2420':
-        nouvtau=tau.boost(-(tau+nuB).boostp3)
-        nouvnu=nuB.boost(-(tau+nuB).boostp3)
-        unittau=(nouvtau.p3).unit
-        unitnu=(nouvnu.p3).unit
-        nnewtau=tau.boost(-B.boostp3)
-        unitau=nnewtau.unit
-        nouvpi=piDstst.boost(-(piDstst+Dst).boostp3)
-        nouvDst=D0.boost(-(piDstst+Dst).boostp3)
-        nouvDstst=Dstst.boost(-B.boostp3)
-        unitDstst=(nouvDstst.p3).unit
-        unitDst=(nouvDst.p3).unit
-        nnewDst=Dst.boost(-B.boostp3)
-        uniDst=nnewDst.unit
-        nnormal1=unitDstst.cross(uniDst)
-        normal1=nnormal1.unit
-        nnormal2=unitDstst.cross(unitau)
-        normal2=nnormal2.unit
-        pparallel=normal1.cross(unitDstst)
-        parallel=pparallel.unit
-        co = normal1.dot(normal2)
-        si = parallel.dot(normal2)
-        chi = np.arctan2(si,co)
-
-        angles=[costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]
-
-    return angles
-def com(filename,frame):
-    if filename=='dh_D0':
-        df=dh_D0
-    if filename=='dh_Dst':
-        df=dh_Dst
-    if filename=='dh_2460':
-        df=dh_2460
-    if filename=='dh_2420':
-        df=dh_2420
-        
-    if frame=='B' or frame=='W':
-        COM=LorentzVector(df[frame+'_PX_TRUE'],df[frame+'_PY_TRUE'],df[frame+'_PZ_TRUE'],df[frame+'_E_TRUE'])
-    elif frame=='D0':
-        if filename=='dh_D0':
-            COM=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-        elif filename=='dh_Dst':
-            COM=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
-        elif filename=='dh_2460' or filename=='dh_2420':
-            COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])        
-    return COM
-
-def coordinates(filename):
-    if filename=='dh_D0':
-        df=dh_D0
-    if filename=='dh_Dst':
-        df=dh_Dst
-    if filename=='dh_2460':
-        df=dh_2460
-    if filename=='dh_2420':
-        df=dh_2420
-    PV_X,PV_Y,PV_Z=(df['B_Ori_z_TRUE'][i],df['B_Ori_x_TRUE'][i],df['B_Ori_y_TRUE'][i])
-    B_X,B_Y,B_Z=(df['B_End_z_TRUE'][i],df['B_End_x_TRUE'][i],df['B_End_y_TRUE'][i])
-    pitau1_X=df['Tau_Pi1_PZ_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_X
-    pitau1_Y=df['Tau_Pi1_PX_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Y
-    pitau1_Z=df['Tau_Pi1_PY_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Z
-    pitau2_X=df['Tau_Pi2_PZ_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_X
-    pitau2_Y=df['Tau_Pi2_PX_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Y
-    pitau2_Z=df['Tau_Pi2_PY_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Z
-    pitau3_X=df['Tau_Pi3_PZ_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_X
-    pitau3_Y=df['Tau_Pi3_PX_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Y
-    pitau3_Z=df['Tau_Pi3_PY_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Z
-    nutau_X=df['Tau_nu_PZ_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_X
-    nutau_Y=df['Tau_nu_PX_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Y
-    nutau_Z=df['Tau_nu_PY_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Z
-    tau_X,tau_Y,tau_Z=[df['Tau_End_z_TRUE'][i],df['Tau_End_x_TRUE'][i],df['Tau_End_y_TRUE'][i]]
-    nu_X=df['B_nu_PZ_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_X
-    nu_Y=df['B_nu_PX_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Y
-    nu_Z=df['B_nu_PY_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Z
-    if filename=='dh_D0':
-        D0_X,D0_Y,D0_Z=(df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i])
-        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
-        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
-        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
-
-        piD0_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
-        piD0_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
-        piD0_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
-
-
-        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piD0_X,piD0_Y,piD0_Z,pitau1_X,pitau1_Y,pitau1_Z,
-               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
-    if filename=='dh_Dst':
-        Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
-        D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
-        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
-        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
-        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
-        piK_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
-        piK_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
-        piK_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
-        piDst_X=df['Dst_Pi_PZ_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_X
-        piDst_Y=df['Dst_Pi_PX_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Y
-        piDst_Z=df['Dst_Pi_PY_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Z
-
-        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,
-               D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
-               piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
-               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
-    
-    if filename=='dh_2420' or filename=='dh_2460':
-        Dstst_X,Dstst_Y,Dstst_Z=(df['Dstst_End_z_TRUE'][i],df['Dstst_End_x_TRUE'][i],df['Dstst_End_y_TRUE'][i])
-        Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
-        D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
-        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
-        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y 
-        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
-        piK_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
-        piK_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
-        piK_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
-        piDst_X=df['Dst_Pi_PZ_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_X
-        piDst_Y=df['Dst_Pi_PX_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Y
-        piDst_Z=df['Dst_Pi_PY_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Z
-        piDstst_X=df['Dstst_Pi_PZ_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_X
-        piDstst_Y=df['Dstst_Pi_PX_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Y
-        piDstst_Z=df['Dstst_Pi_PY_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Z
-        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
-               D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
-               piDstst_X,piDstst_Y,piDstst_Z,
-               piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
-               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
-    return coord
-
-def calc_xrange(df):
-    if df=='dh_D0':
-        xrange=max(abs([PV_X,B_X,D0_X,tau_X,nu_X,K_X,piD0_X,pitau1_X,
-               pitau2_X,pitau3_X,nutau_X]))
-    if df=='dh_Dst':
-        xrange=max(abs([PV_X,B_X,Dst_X,D0_X,tau_X,nu_X,K_X,piDst_X,
-               piK_X,pitau1_X,pitau2_X,pitau3_X,nutau_X]))
-    if df=='dh_2460' or df=='dh_2420':
-        xrange=max(abs([Dst_X,Dstst_X,D0_X,tau_X,nu_X,K_X,piDst_X,piDstst_X,piK_X,pitau1_X,
-               pitau2_X,pitau3_X,nutau_X]))
-    return xrange
-
-def calc_yrange(df):
-    if df=='dh_D0':
-        yrange=max(abs([PV_Y,B_X,D0_Y,tau_Y,nu_Y,K_Y,piD0_Y,pitau1_Y,
-               pitau2_Y,pitau3_Y,nutau_Y]))
-    if df=='dh_Dst':
-        yrange=max(abs([PV_Y,B_Y,Dst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,
-               piK_Y,pitau1_Y,pitau2_Y,pitau3_Y,nutau_Y]))
-    if df=='dh_2460' or df=='dh_2420':
-        yrange=max(abs([Dst_Y,Dstst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,piDstst_Y,piK_Y,pitau1_Y,
-               pitau2_Y,pitau3_Y,nutau_Y]))
-    return yrange
-def calc_zrange(df):
-    if df=='dh_D0':
-        zrange=max(abs([PV_Z,B_X,D0_Z,tau_Z,nu_Z,K_Z,piD0_Z,pitau1_Z,
-               pitau2_Z,pitau3_Z,nutau_Z]))
-    if df=='dh_Dst':
-        zrange=max(abs([PV_Z,B_Z,Dst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,
-               piK_Z,pitau1_Z,pitau2_Z,pitau3_Z,nutau_Z]))
-    if df=='dh_2460' or df=='dh_2420':
-        zrange=max(abs([Dst_Z,Dstst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,piDstst_Z,piK_Z,pitau1_Z,
-               pitau2_Z,pitau3_Z,nutau_Z]))
-    return zrange
-############################################################################
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__)
+app.css.append_css({'external_url': 'https://codepen.io/plotly/pen/EQZeaW.css'})
+server = app.server
+#############################################
 app.layout = html.Div(children=[
     html.Div([
         html.Div([
@@ -617,7 +318,6 @@ def drawangle(selection,choice,filename):
 
     elif filename=='dh_Dst':
         df=dh_Dst
-        particle_list=particles(dh_Dst)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
@@ -742,43 +442,7 @@ def drawangle(selection,choice,filename):
             opacity=0.4,
             color='#3E3A3A')
             dataangle=[traceQ,traceD0,tracenu,tracetau,traceK,tracepi,dash1,mesh1]
-        if choice=='B':
-            angleBx,angleBy,angleBz=(0,0,0)
-            angleD0x,angleD0y,angleD0z=(newD0.z[i]/newD0.p[i]+angleBx,newD0.x[i]/newD0.p[i]+angleBy,newD0.y[i]/newD0.p[i]+angleBz)
-
-            angleQx,angleQy,angleQz=(newW.z[i]/newW.p[i]+angleBx,newW.x[i]/newW.p[i]+angleBy,newW.y[i]/newW.p[i]+angleBz)
-            angleKx,angleKy,angleKz=(newK.z[i]/newK.p[i]+angleD0x,newK.x[i]/newK.p[i]+angleD0y,newK.y[i]/newK.p[i]+angleD0z)
-            anglepix,anglepiy,anglepiz=(newpiD0.z[i]/newpiD0.p[i]+angleD0x,newpiD0.x[i]/newpiD0.p[i]+angleD0y,newpiD0.y[i]/newpiD0.p[i]+angleD0z)
-            angletaux,angletauy,angletauz=(angleQx+newtau.z[i]/newtau.p[i],angleQy+newtau.x[i]/newtau.p[i],angleQz+newtau.y[i]/newtau.p[i])
-            anglenux,anglenuy,anglenuz=(angleQx+newnuB.z[i]/newnuB.p[i],angleQy+newnuB.x[i]/newnuB.p[i],angleQz+newnuB.y[i]/newnuB.p[i])
-            vec1=Vector3D(newW.x[i]/newW.p[i],newW.y[i]/newW.p[i],newW.z[i]/newW.p[i])
-            vec2=Vector3D(newtau.x[i]/newtau.p[i],newtau.y[i]/newtau.p[i],newtau.z[i]/newtau.p[i])
-            vec3=Vector3D(newK.x[i]/newK.p[i],newK.y[i]/newK.p[i],newK.z[i]/newK.p[i])
-            vec4=Vector3D(newD0.x[i]/newD0.p[i],newD0.y[i]/newD0.p[i],newD0.z[i]/newD0.p[i])
-
-            dot1=vec1.dot(vec2)
-            dot2=vec3.dot(vec4)
-            norm1=dot1+1
-            norm2=dot2+1
-            d1x,d1y,d1z=(norm1*angleQx,norm1*angleQy,norm1*angleQz)
-            d2x,d2y,d2z=(norm2*angleD0x,norm2*angleD0y,norm2*angleD0z)
-            traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-            traceD0=go.Scatter3d(x=[angleBx,angleD0x],y=[angleBy,angleD0y],z=[angleBz,angleD0z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D0'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-            tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-            tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-            traceK=go.Scatter3d(x=[angleD0x,angleKx],y=[angleD0y,angleKy],z=[angleD0z,angleKz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-            tracepi=go.Scatter3d(x=[angleD0x,anglepix],y=[angleD0y,anglepiy],z=[angleD0z,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-
-
-            dash1=go.Scatter3d(x=[d1x,d2x],y=[d1y,d2y],z=[d1z,d2z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
-
-            mesh1 = go.Mesh3d(x=[angleD0x,angleQx,newtau.z[i]/newtau.p[i]*2-angleD0x,newtau.z[i]/newtau.p[i]*2+angleD0x],y=[angleD0y,angleQy,newtau.x[i]/newtau.p[i]*2-angleD0y,newtau.x[i]/newtau.p[i]*2+angleD0y],z=[angleD0z,angleQz,newtau.y[i]/newtau.p[i]*2-angleD0z,newtau.y[i]/newtau.p[i]*2+angleD0z],
-                    opacity=0.4,
-                    color='#3E3A3A')
-            mesh2 = go.Mesh3d(x=[angleKx,angleQx,(newK.z[i]/newK.p[i])*10+angleQx,(newD0.z[i]/newD0.p[i])*10-angleQx],y=[angleD0y,angleQy,newK.x[i]/newK.p[i]*10+angleQy,angleQy,newD0.x[i]/newD0.p[i]*10-angleQy],z=[angleD0z,angleQz,(newD0.y[i]/newD0.p[i])*10+angleQz,(newD0.y[i]/newD0.p[i])*10+angleQz],
-                    opacity=0.4,
-                    color='#00cc51')
-            dataangle=[traceQ,traceK,tracenu,tracetau,traceD0,tracepi,dash1,mesh1,mesh2]
+       
 
             layoutangle = go.Layout(
                         showlegend=False,
@@ -964,7 +628,7 @@ def drophist(choice,filename):
         df=dh_Dst
         particle_list=particles(filename)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_Dst)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
@@ -1071,13 +735,20 @@ def drawevent(selection,radio,frame,filename):
                         piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
 
-                    if filename=='dh_2420' or filename=='dh_2460':
+                    if filename=='dh_2420' :
                         [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
                         D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
                         piDstst_X,piDstst_Y,piDstst_Z,
                         piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
-                     
+                    if filename=='dh_2460':
+                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
+                        D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+                        piDstst_X,piDstst_Y,piDstst_Z,
+                        piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+                        pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
+                        
+                        
                 else:
                     COM=com(filename,frame)
                     liste_part=change_frame(COM,filename)
@@ -1087,9 +758,11 @@ def drawevent(selection,radio,frame,filename):
                     elif filename=='dh_Dst':
                         [newB,newW,newDst,newD0,newtau,newnuB,newK,newpiDst,newpiK,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
 
-                    elif filename=='dh_2420' or filename=='dh_2460':
+                    elif filename=='dh_2420' : 
                         [newB,newW,newDst,newDstst,newD0,newtau,newnuB,newK,newpiDst,newpiDstst,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
-            
+                    elif filename=='dh_2460':
+                        [newB,newW,newDst,newDstst,newD0,newtau,newnuB,newK,newpiDst,newpiDstst,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+                   
                     PV_X,PV_Y,PV_Z=(0,0,0)
                     if frame=='B':
                         B_X,B_Y,B_Z=(0,0,0)
@@ -1132,7 +805,7 @@ def drawevent(selection,radio,frame,filename):
                         piDst_Y=newpiDst.x[i]*dis/newpiDst.p[i]+Dst_Y
                         piDst_Z=newpiDst.y[i]*dis/newpiDst.p[i]+Dst_Z
                     
-                    if filename=='dh_2460' or filename=='dh_2420':
+                    if filename=='dh_2460' :
                         Dstst_X,Dstst_Y,Dstst_Z=[newDstst.z[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_X,newDstst.x[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Y,newDstst.y[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Z]
                         Dst_X,Dst_Y,Dst_Z=[newDst.z[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_X,newDst.x[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Y,newDst.y[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Z]
                         piDst_X=newpiDst.z[i]*dis/newpiDst.p[i]+Dst_X
@@ -1143,37 +816,83 @@ def drawevent(selection,radio,frame,filename):
                         piDstst_X=newpiDstst.z[i]*dis/newpiDstst.p[i]+Dstst_X
                         piDstst_Y=newpiDstst.x[i]*dis/newpiDstst.p[i]+Dstst_Y
                         piDstst_Z=newpiDstst.y[i]*dis/newpiDstst.p[i]+Dstst_Z
-                   
+                    if filename=='dh_2420':
+                        Dstst_X,Dstst_Y,Dstst_Z=[newDstst.z[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_X,newDstst.x[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Y,newDstst.y[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Z]
+                        Dst_X,Dst_Y,Dst_Z=[newDst.z[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_X,newDst.x[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Y,newDst.y[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Z]
+                        piDst_X=newpiDst.z[i]*dis/newpiDst.p[i]+Dst_X
+                        piDst_Y=newpiDst.x[i]*dis/newpiDst.p[i]+Dst_Y
+                        piDst_Z=newpiDst.y[i]*dis/newpiDst.p[i]+Dst_Z
+                        D0_X,D0_Y,D0_Z=[newD0.z[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+Dst_X,newD0.x[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+Dst_Y,newD0.y[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+Dst_Z]
+                                               
+                        piDstst_X=newpiDstst.z[i]*dis/newpiDstst.p[i]+Dstst_X
+                        piDstst_Y=newpiDstst.x[i]*dis/newpiDstst.p[i]+Dstst_Y
+                        piDstst_Z=newpiDstst.y[i]*dis/newpiDstst.p[i]+Dstst_Z
+                    
                 xrange=calc_xrange(filename)
                 yrange=calc_yrange(filename)
                 zrange=calc_zrange(filename)
                 
                 if radio=='3D':
-                    traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
-                    tracetau=go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),width=3))
-                    tracenuB=go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),width=3))
-                    tracepitau1=go.Scatter3d(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],z=[tau_Z,pitau1_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau1),width = 3))
-                    tracepitau2=go.Scatter3d(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],z=[tau_Z,pitau2_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau2),width = 3))
-                    tracepitau3=go.Scatter3d(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],z=[tau_Z,pitau3_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau3),width = 3))
-                    tracenutau=go.Scatter3d(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],z=[tau_Z,nutau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = colorval(nutau),width = 3))
-                    traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
-                    tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
-                      
+                    
                     if filename=='dh_D0':
+                        traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
+                        tracetau=go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),width=3))
+                        tracenuB=go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),width=3))
+                        tracepitau1=go.Scatter3d(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],z=[tau_Z,pitau1_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau1),width = 3))
+                        tracepitau2=go.Scatter3d(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],z=[tau_Z,pitau2_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau2),width = 3))
+                        tracepitau3=go.Scatter3d(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],z=[tau_Z,pitau3_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau3),width = 3))
+                        tracenutau=go.Scatter3d(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],z=[tau_Z,nutau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = colorval(nutau),width = 3))
+                        traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
+                        tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
+
                         traceD0=go.Scatter3d(x=[B_X,D0_X],y=[B_Y,D0_Y],z=[B_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0)))
+                        
                     if filename=='dh_Dst':
+                        traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
+                        tracetau=go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),width=3))
+                        tracenuB=go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),width=3))
+                        tracepitau1=go.Scatter3d(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],z=[tau_Z,pitau1_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau1),width = 3))
+                        tracepitau2=go.Scatter3d(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],z=[tau_Z,pitau2_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau2),width = 3))
+                        tracepitau3=go.Scatter3d(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],z=[tau_Z,pitau3_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau3),width = 3))
+                        tracenutau=go.Scatter3d(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],z=[tau_Z,nutau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = colorval(nutau),width = 3))
+                        traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
+                        tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
+
                         tracepiK=go.Scatter3d(x=[D0_X,piK_X],y=[D0_Y,piK_Y],z=[D0_Z,piK_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piK),width = 3))
                         tracepiDst=go.Scatter3d(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],z=[Dst_Z,piDst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
                         traceDst=go.Scatter3d(x=[B_X,Dst_X],y=[B_Y,Dst_Y],z=[B_Z,Dst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D*'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                         traceD0=go.Scatter3d(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],z=[Dst_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0)))
-                    if filename=='dh_2420' or filename=='dh_2460':
+                    if filename=='dh_2420' :
+                        traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
+                        tracetau=go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),width=3))
+                        tracenuB=go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),width=3))
+                        tracepitau1=go.Scatter3d(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],z=[tau_Z,pitau1_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau1),width = 3))
+                        tracepitau2=go.Scatter3d(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],z=[tau_Z,pitau2_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau2),width = 3))
+                        tracepitau3=go.Scatter3d(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],z=[tau_Z,pitau3_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau3),width = 3))
+                        tracenutau=go.Scatter3d(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],z=[tau_Z,nutau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = colorval(nutau),width = 3))
+                        traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
+                        tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
+                        
                         tracepiDstst=go.Scatter3d(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],z=[Dstst_Z,piDstst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
                         traceDstst=go.Scatter3d(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],z=[B_Z,Dstst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D**'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                         tracepiDst=go.Scatter3d(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],z=[Dst_Z,piDst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
                         traceDst=go.Scatter3d(x=[Dstst_X,Dst_X],y=[Dstst_Y,Dst_Y],z=[Dstst_Z,Dst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D*'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                         traceD0=go.Scatter3d(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],z=[Dst_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0)))
-                    
-                    
+                    if filename=='dh_2460':
+                        traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
+                        tracetau=go.Scatter3d(x=[B_X,tau_X],y=[B_Y,tau_Y],z=[B_Z,tau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = colorval(tau),width=3))
+                        tracenuB=go.Scatter3d(x=[B_X,nu_X],y=[B_Y,nu_Y],z=[B_Z,nu_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)",opacity=0.8),text=['', 'nuB'],textposition='top left',line = dict(color = colorval(nuB),width=3))
+                        tracepitau1=go.Scatter3d(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],z=[tau_Z,pitau1_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau1),width = 3))
+                        tracepitau2=go.Scatter3d(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],z=[tau_Z,pitau2_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau2),width = 3))
+                        tracepitau3=go.Scatter3d(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],z=[tau_Z,pitau3_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(pitau3),width = 3))
+                        tracenutau=go.Scatter3d(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],z=[tau_Z,nutau_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = colorval(nutau),width = 3))
+                        traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
+                        tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
+
+                        tracepiDstst=go.Scatter3d(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],z=[Dstst_Z,piDstst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
+                        traceDstst=go.Scatter3d(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],z=[B_Z,Dstst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D**'],textposition='top left',line = dict(width=3,color=colorval(D0)))
+                        tracepiDst=go.Scatter3d(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],z=[Dst_Z,piDst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
+                        traceDst=go.Scatter3d(x=[Dstst_X,Dst_X],y=[Dstst_Y,Dst_Y],z=[Dstst_Z,Dst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D*'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                     layout_event = go.Layout(
                             showlegend=False,
                             #width=400,
@@ -1243,39 +962,90 @@ def drawevent(selection,radio,frame,filename):
 
 
                 elif radio=='ZX':
-
-                    traceB=go.Scatter(x=[PV_X,B_X],y=[PV_Y,B_Y],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
-                                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracetau=go.Scatter(x=[B_X,tau_X],y=[B_Y,tau_Y],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
-
-                    tracenuB=go.Scatter(x=[B_X,nu_X],y=[B_Y,nu_Y],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau1=go.Scatter(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau2=go.Scatter(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau3=go.Scatter(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    
-                    traceK=go.Scatter(x=[D0_X,K_X],y=[D0_Y,K_Y],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
-
-                    tracepiD0=go.Scatter(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-
-                    tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
-
                     if filename=='dh_D0':
+                        traceB=go.Scatter(x=[PV_X,B_X],y=[PV_Y,B_Y],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_X,tau_X],y=[B_Y,tau_Y],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
+                        tracenuB=go.Scatter(x=[B_X,nu_X],y=[B_Y,nu_Y],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_X,K_X],y=[D0_Y,K_Y],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracepiD0=go.Scatter(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
+                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
                     if filename=='dh_Dst':
+                        traceB=go.Scatter(x=[PV_X,B_X],y=[PV_Y,B_Y],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_X,tau_X],y=[B_Y,tau_Y],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_X,nu_X],y=[B_Y,nu_Y],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_X,K_X],y=[D0_Y,K_Y],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracepiD0=go.Scatter(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         tracepiK=go.Scatter(x=[D0_X,piK_X],y=[D0_Y,piK_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_X,Dst_X],y=[B_Y,Dst_Y],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                    if filename=='dh_2420' :
+                        traceB=go.Scatter(x=[PV_X,B_X],y=[PV_Y,B_Y],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_X,tau_X],y=[B_Y,tau_Y],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if filename=='dh_2420' or filename=='dh_2460':
+                        tracenuB=go.Scatter(x=[B_X,nu_X],y=[B_Y,nu_Y],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_X,K_X],y=[D0_Y,K_Y],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracepiD0=go.Scatter(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         tracepiDstst=go.Scatter(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDstst=go.Scatter(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[Dstst_X,Dst_X],y=[Dstst_Y,Dst_Y],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
-                        
+                    if filename=='dh_2460':
+                        traceB=go.Scatter(x=[PV_X,B_X],y=[PV_Y,B_Y],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_X,tau_X],y=[B_Y,tau_Y],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
+                        tracenuB=go.Scatter(x=[B_X,nu_X],y=[B_Y,nu_Y],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_X,pitau1_X],y=[tau_Y,pitau1_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_X,pitau2_X],y=[tau_Y,pitau2_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_X,pitau3_X],y=[tau_Y,pitau3_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_X,K_X],y=[D0_Y,K_Y],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracepiD0=go.Scatter(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
+                        tracepiDstst=go.Scatter(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDstst=go.Scatter(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiDst=go.Scatter(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDst=go.Scatter(x=[Dstst_X,Dst_X],y=[Dstst_Y,Dst_Y],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
+                
                     layout_event = go.Layout(
                     showlegend=False,
                     paper_bgcolor = '#F4F4F8',
@@ -1311,35 +1081,79 @@ def drawevent(selection,radio,frame,filename):
 
                 elif radio=='XY':
 
-                    traceB=go.Scatter(x=[PV_Y,B_Y],y=[PV_Z,B_Z],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracetau=go.Scatter(x=[B_Y,tau_Y],y=[B_Z,tau_Z],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
-
-                    tracenuB=go.Scatter(x=[B_Y,nu_Y],y=[B_Z,nu_Z],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau1=go.Scatter(x=[tau_Y,pitau1_Y],y=[tau_Z,pitau1_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau2=go.Scatter(x=[tau_Y,pitau2_Y],y=[tau_Z,pitau2_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau3=go.Scatter(x=[tau_Y,pitau3_Y],y=[tau_Z,pitau3_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                
-                    traceK=go.Scatter(x=[D0_Y,K_Y],y=[D0_Z,K_Z],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
-
                     if filename=='dh_D0':
-                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceB=go.Scatter(x=[PV_Y,B_Y],y=[PV_Z,B_Z],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Y,tau_Y],y=[B_Z,tau_Z],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
+                        tracenuB=go.Scatter(x=[B_Y,nu_Y],y=[B_Z,nu_Z],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Y,pitau1_Y],y=[tau_Z,pitau1_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Y,pitau2_Y],y=[tau_Z,pitau2_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Y,pitau3_Y],y=[tau_Z,pitau3_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Y,K_Y],y=[D0_Z,K_Z],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
+                        traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        
                     if filename=='dh_Dst':
+                        traceB=go.Scatter(x=[PV_Y,B_Y],y=[PV_Z,B_Z],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Y,tau_Y],y=[B_Z,tau_Z],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_Y,nu_Y],y=[B_Z,nu_Z],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Y,pitau1_Y],y=[tau_Z,pitau1_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Y,pitau2_Y],y=[tau_Z,pitau2_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Y,pitau3_Y],y=[tau_Z,pitau3_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Y,K_Y],y=[D0_Z,K_Z],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         tracepiK=go.Scatter(x=[D0_Y,piK_Y],y=[D0_Z,piK_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Y,piDst_Y],y=[Dst_Z,piDst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_Y,Dst_Y],y=[B_Z,Dst_Z],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+   
+                    if filename=='dh_2420' :
+                        traceB=go.Scatter(x=[PV_Y,B_Y],y=[PV_Z,B_Z],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Y,tau_Y],y=[B_Z,tau_Z],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if filename=='dh_2420' or filename=='dh_2460':
+                        tracenuB=go.Scatter(x=[B_Y,nu_Y],y=[B_Z,nu_Z],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Y,pitau1_Y],y=[tau_Z,pitau1_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Y,pitau2_Y],y=[tau_Z,pitau2_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Y,pitau3_Y],y=[tau_Z,pitau3_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Y,K_Y],y=[D0_Z,K_Z],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         tracepiDstst=go.Scatter(x=[Dstst_Y,piDstst_Y],y=[Dstst_Z,piDstst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDstst=go.Scatter(x=[B_Y,Dstst_Y],y=[B_Z,Dstst_Z],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Y,piDst_Y],y=[Dst_Z,piDst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[Dstst_Y,Dst_Y],y=[Dstst_Z,Dst_Z],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
-                        
-                        
+                    
+                    if filename=='dh_2460':
+                        traceB=go.Scatter(x=[PV_Y,B_Y],y=[PV_Z,B_Z],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Y,tau_Y],y=[B_Z,tau_Z],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_Y,nu_Y],y=[B_Z,nu_Z],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Y,pitau1_Y],y=[tau_Z,pitau1_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Y,pitau2_Y],y=[tau_Z,pitau2_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Y,pitau3_Y],y=[tau_Z,pitau3_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Y,K_Y],y=[D0_Z,K_Z],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiDstst=go.Scatter(x=[Dstst_Y,piDstst_Y],y=[Dstst_Z,piDstst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDstst=go.Scatter(x=[B_Y,Dstst_Y],y=[B_Z,Dstst_Z],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiDst=go.Scatter(x=[Dst_Y,piDst_Y],y=[Dst_Z,piDst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDst=go.Scatter(x=[Dstst_Y,Dst_Y],y=[Dstst_Z,Dst_Z],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
+                    
                     layout_event = go.Layout(
                         showlegend=False,
                         paper_bgcolor = '#F4F4F8',
@@ -1373,36 +1187,83 @@ def drawevent(selection,radio,frame,filename):
                 )
 
                 elif radio=='YZ':
-                    
-                    
-                    traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
-
-                    tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                
-                    traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                    tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
-
+                                        
                     if filename=='dh_D0':
-                        traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
 
+                        tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
+                        traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        
                     if filename=='dh_Dst':
+                        traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         traceD0=go.Scatter(x=[Dst_Z,D0_Z],y=[Dst_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
                         tracepiK=go.Scatter(x=[D0_Z,piK_Z],y=[D0_X,piK_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Z,piDst_Z],y=[Dst_X,piDst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_Z,Dst_Z],y=[B_X,Dst_X],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
-                    if filename=='dh_2420' or filename=='dh_2460':
+                        
+                    if filename=='dh_2420' : 
+                        traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
                         traceD0=go.Scatter(x=[Dst_Z,D0_Z],y=[Dst_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[Dstst_Z,Dst_Z],y=[Dstst_X,Dst_X],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDstst=go.Scatter(x=[Dstst_Z,piDstst_Z],y=[Dstst_X,piDstst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDstst=go.Scatter(x=[B_Z,Dstst_Z],y=[B_X,Dstst_X],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Z,piDst_Z],y=[Dst_X,piDst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
-   
+                    if filename=='dh_2460':
+                        traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+
+                        traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+
+
+                        traceD0=go.Scatter(x=[Dst_Z,D0_Z],y=[Dst_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDst=go.Scatter(x=[Dstst_Z,Dst_Z],y=[Dstst_X,Dst_X],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiDstst=go.Scatter(x=[Dstst_Z,piDstst_Z],y=[Dstst_X,piDstst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                        traceDstst=go.Scatter(x=[B_Z,Dstst_Z],y=[B_X,Dstst_X],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
+                        tracepiDst=go.Scatter(x=[Dst_Z,piDst_Z],y=[Dst_X,piDst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                   
+                        
                     layout_event = go.Layout(
                         showlegend=False,
                         paper_bgcolor = '#F4F4F8',
@@ -1439,12 +1300,12 @@ def drawevent(selection,radio,frame,filename):
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau]
     if filename=='dh_Dst':
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
-    if filename=='dh_2460' or filename=='dh_2420':
+    if filename=='dh_2420':          
+        data_event=[traceDstst,tracepiDstst,traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
+    if filename=='dh_2460':
         data_event=[traceDstst,tracepiDstst,traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
     
-    return {'data': data_event, 'layout':layout_event
-
-                                }
+    return {'data': data_event, 'layout':layout_event}
 
 
 
