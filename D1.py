@@ -286,7 +286,7 @@ def coordinates(df):
         piDstst_X=df['Dstst_Pi_PZ_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_X
         piDstst_Y=df['Dstst_Pi_PX_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Y
         piDstst_Z=df['Dstst_Pi_PY_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Z
-        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,,Dstst_X,Dstst_Y,Dstst_Z,
+        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
                D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
                piDstst_X,piDstst_Y,piDstst_Z,
                piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
@@ -1021,7 +1021,7 @@ def drawevent(selection,radio,frame,filename):
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
 
                     if df==dh_2420 or df==dh_2460:
-                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,,Dstst_X,Dstst_Y,Dstst_Z,
+                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
                         D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
                         piDstst_X,piDstst_Y,piDstst_Z,
                         piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
@@ -1388,7 +1388,7 @@ def drawevent(selection,radio,frame,filename):
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau]
     if df==dh_Dst:
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
-    if df==dh_2460 or df=d=dh_2420:
+    if df==dh_2460 or df==dh_2420:
         data_event=[traceDstst,tracepiDstst,traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
     
     return {'data': data_event, 'layout':layout_event
