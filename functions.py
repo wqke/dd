@@ -31,9 +31,6 @@ import plotly.plotly as py
 import plotly.tools as tls
 from plotly.graph_objs import Data, Layout, Figure
 from plotly.graph_objs import Scatter
-from functions import change_frame,calc_angles,particles,calc_xrange,calc_yrange,calc_zrange,com,coordinates
-
-
 
 
 dht_D0=root_pandas.read_root('model_BplusD0.root',key='DecayTree')
@@ -302,8 +299,10 @@ def com(filename,frame):
             COM=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
         elif filename=='dh_Dst':
             COM=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
-        elif filename=='dh_2460' or filename=='dh_2420':
-            COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])        
+        elif filename=='dh_2460' :
+            COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])   
+        elif filename=='dh_2420':
+            COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])   
     return COM
 
 def coordinates(filename):
@@ -364,7 +363,28 @@ def coordinates(filename):
                piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
                pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
     
-    if filename=='dh_2420' or filename=='dh_2460':
+    if filename=='dh_2420' :
+        Dstst_X,Dstst_Y,Dstst_Z=(df['Dstst_End_z_TRUE'][i],df['Dstst_End_x_TRUE'][i],df['Dstst_End_y_TRUE'][i])
+        Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
+        D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
+        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
+        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y 
+        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
+        piK_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
+        piK_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
+        piK_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
+        piDst_X=df['Dst_Pi_PZ_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_X
+        piDst_Y=df['Dst_Pi_PX_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Y
+        piDst_Z=df['Dst_Pi_PY_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Z
+        piDstst_X=df['Dstst_Pi_PZ_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_X
+        piDstst_Y=df['Dstst_Pi_PX_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Y
+        piDstst_Z=df['Dstst_Pi_PY_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Z
+        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
+               D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+               piDstst_X,piDstst_Y,piDstst_Z,
+               piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
+    elif filename=='dh_2460':
         Dstst_X,Dstst_Y,Dstst_Z=(df['Dstst_End_z_TRUE'][i],df['Dstst_End_x_TRUE'][i],df['Dstst_End_y_TRUE'][i])
         Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
         D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
@@ -394,7 +414,10 @@ def calc_xrange(df):
     if df=='dh_Dst':
         xrange=max(abs([PV_X,B_X,Dst_X,D0_X,tau_X,nu_X,K_X,piDst_X,
                piK_X,pitau1_X,pitau2_X,pitau3_X,nutau_X]))
-    if df=='dh_2460' or df=='dh_2420':
+    if df=='dh_2460':
+        xrange=max(abs([Dst_X,Dstst_X,D0_X,tau_X,nu_X,K_X,piDst_X,piDstst_X,piK_X,pitau1_X,
+               pitau2_X,pitau3_X,nutau_X]))
+    elif df=='dh_2420':
         xrange=max(abs([Dst_X,Dstst_X,D0_X,tau_X,nu_X,K_X,piDst_X,piDstst_X,piK_X,pitau1_X,
                pitau2_X,pitau3_X,nutau_X]))
     return xrange
@@ -406,9 +429,13 @@ def calc_yrange(df):
     if df=='dh_Dst':
         yrange=max(abs([PV_Y,B_Y,Dst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,
                piK_Y,pitau1_Y,pitau2_Y,pitau3_Y,nutau_Y]))
-    if df=='dh_2460' or df=='dh_2420':
+    if df=='dh_2460':
         yrange=max(abs([Dst_Y,Dstst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,piDstst_Y,piK_Y,pitau1_Y,
                pitau2_Y,pitau3_Y,nutau_Y]))
+    elif df=='dh_2420':
+        yrange=max(abs([Dst_Y,Dstst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,piDstst_Y,piK_Y,pitau1_Y,
+               pitau2_Y,pitau3_Y,nutau_Y]))
+        
     return yrange
 def calc_zrange(df):
     if df=='dh_D0':
@@ -417,7 +444,10 @@ def calc_zrange(df):
     if df=='dh_Dst':
         zrange=max(abs([PV_Z,B_Z,Dst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,
                piK_Z,pitau1_Z,pitau2_Z,pitau3_Z,nutau_Z]))
-    if df=='dh_2460' or df=='dh_2420':
+    if df=='dh_2460' :
+        zrange=max(abs([Dst_Z,Dstst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,piDstst_Z,piK_Z,pitau1_Z,
+               pitau2_Z,pitau3_Z,nutau_Z]))
+    elif df=='dh_2420':
         zrange=max(abs([Dst_Z,Dstst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,piDstst_Z,piK_Z,pitau1_Z,
                pitau2_Z,pitau3_Z,nutau_Z]))
     return zrange
