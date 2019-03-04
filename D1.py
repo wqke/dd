@@ -50,24 +50,24 @@ dh_D0=dht_D0.head(100)
 
 
 dht_Dst=root_pandas.read_root('model_tree.root',key='DecayTree')
-dht_Dst['W_PX_TRUE']=dht_Dst['B_PX_TRUE']-dht_Dst['D0_PX_TRUE']
-dht_Dst['W_PY_TRUE']=dht_Dst['B_PY_TRUE']-dht_Dst['D0_PY_TRUE']
-dht_Dst['W_PZ_TRUE']=dht_Dst['B_PZ_TRUE']-dht_Dst['D0_PZ_TRUE']
-dht_Dst['W_E_TRUE']=dht_Dst['B_E_TRUE']-dht_Dst['D0_E_TRUE']
+dht_Dst['W_PX_TRUE']=dht_Dst['B_PX_TRUE']-dht_Dst['Dst_PX_TRUE']
+dht_Dst['W_PY_TRUE']=dht_Dst['B_PY_TRUE']-dht_Dst['Dst_PY_TRUE']
+dht_Dst['W_PZ_TRUE']=dht_Dst['B_PZ_TRUE']-dht_Dst['Dst_PZ_TRUE']
+dht_Dst['W_E_TRUE']=dht_Dst['B_E_TRUE']-dht_Dst['Dst_E_TRUE']
 dh_Dst=dht_Dst.head(100)
 
 dht_2460=root_pandas.read_root('model_2460_tree.root',key='DecayTree')
-dht_2460['W_PX_TRUE']=dht_2460['B_PX_TRUE']-dht_2460['D0_PX_TRUE']
-dht_2460['W_PY_TRUE']=dht_2460['B_PY_TRUE']-dht_2460['D0_PY_TRUE']
-dht_2460['W_PZ_TRUE']=dht_2460['B_PZ_TRUE']-dht_2460['D0_PZ_TRUE']
-dht_2460['W_E_TRUE']=dht_2460['B_E_TRUE']-dht_2460['D0_E_TRUE']
+dht_2460['W_PX_TRUE']=dht_2460['B_PX_TRUE']-dht_2460['Dstst_PX_TRUE']
+dht_2460['W_PY_TRUE']=dht_2460['B_PY_TRUE']-dht_2460['Dstst_PY_TRUE']
+dht_2460['W_PZ_TRUE']=dht_2460['B_PZ_TRUE']-dht_2460['Dstst_PZ_TRUE']
+dht_2460['W_E_TRUE']=dht_2460['B_E_TRUE']-dht_2460['Dstst_E_TRUE']
 dh_2460=dht_2460.head(100)
 
 dht_2420=root_pandas.read_root('model_2420_tree.root',key='DecayTree')
-dht_2420['W_PX_TRUE']=dht_2420['B_PX_TRUE']-dht_2420['D0_PX_TRUE']
-dht_2420['W_PY_TRUE']=dht_2420['B_PY_TRUE']-dht_2420['D0_PY_TRUE']
-dht_2420['W_PZ_TRUE']=dht_2420['B_PZ_TRUE']-dht_2420['D0_PZ_TRUE']
-dht_2420['W_E_TRUE']=dht_2420['B_E_TRUE']-dht_2420['D0_E_TRUE']
+dht_2420['W_PX_TRUE']=dht_2420['B_PX_TRUE']-dht_2420['Dstst_PX_TRUE']
+dht_2420['W_PY_TRUE']=dht_2420['B_PY_TRUE']-dht_2420['Dstst_PY_TRUE']
+dht_2420['W_PZ_TRUE']=dht_2420['B_PZ_TRUE']-dht_2420['Dstst_PZ_TRUE']
+dht_2420['W_E_TRUE']=dht_2420['B_E_TRUE']-dht_2420['Dstst_E_TRUE']
 dh_2420=dht_2460.head(100)
 
 
@@ -208,9 +208,90 @@ def calc_angles(df):
         angles=[costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]
 
     return angles
+def com(df,frame):
+    if frame=='B' or frame=='W':
+        COM=LorentzVector(df[frame+'_PX_TRUE'],df[frame+'_PY_TRUE'],df[frame+'_PZ_TRUE'],df[frame+'_E_TRUE'])
+    elif frame=='D0':
+        if df==dh_D0:
+            COM=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
+        elif df==dh_Dst:
+            COM=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
+        elif df==dh_2460 or df==dh_2420:
+            COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])        
+    return COM
+
+def coordinates(df):
+    PV_X,PV_Y,PV_Z=(df['B_Ori_z_TRUE'][i],df['B_Ori_x_TRUE'][i],df['B_Ori_y_TRUE'][i])
+    B_X,B_Y,B_Z=(df['B_End_z_TRUE'][i],df['B_End_x_TRUE'][i],df['B_End_y_TRUE'][i])
+    pitau1_X=df['Tau_Pi1_PZ_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_X
+    pitau1_Y=df['Tau_Pi1_PX_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Y
+    pitau1_Z=df['Tau_Pi1_PY_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Z
+    pitau2_X=df['Tau_Pi2_PZ_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_X
+    pitau2_Y=df['Tau_Pi2_PX_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Y
+    pitau2_Z=df['Tau_Pi2_PY_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Z
+    pitau3_X=df['Tau_Pi3_PZ_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_X
+    pitau3_Y=df['Tau_Pi3_PX_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Y
+    pitau3_Z=df['Tau_Pi3_PY_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Z
+    nutau_X=df['Tau_nu_PZ_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_X
+    nutau_Y=df['Tau_nu_PX_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Y
+    nutau_Z=df['Tau_nu_PY_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Z
+    tau_X,tau_Y,tau_Z=[df['Tau_End_z_TRUE'][i],df['Tau_End_x_TRUE'][i],df['Tau_End_y_TRUE'][i]]
+    nu_X=df['B_nu_PZ_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_X
+    nu_Y=df['B_nu_PX_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Y
+    nu_Z=df['B_nu_PY_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Z
+    if df==dh_D0:
+        D0_X,D0_Y,D0_Z=(df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i])
+        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
+        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
+        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
+
+        piD0_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
+        piD0_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
+        piD0_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
 
 
+        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piD0_X,piD0_Y,piD0_Z,pitau1_X,pitau1_Y,pitau1_Z,
+               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
+    if df==dh_Dst:
+        Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
+        D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
+        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
+        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
+        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
+        piK_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
+        piK_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
+        piK_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
+        piDst_X=df['Dst_Pi_PZ_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_X
+        piDst_Y=df['Dst_Pi_PX_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Y
+        piDst_Z=df['Dst_Pi_PY_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Z
 
+        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,
+               D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+               piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
+    
+    if df==dh_2420 or df==dh_2460:
+        Dstst_X,Dstst_Y,Dstst_Z=(df['Dstst_End_z_TRUE'][i],df['Dstst_End_x_TRUE'][i],df['Dstst_End_y_TRUE'][i])
+        Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
+        D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
+        K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
+        K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
+        K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
+        piK_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
+        piK_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
+        piK_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
+        piDst_X=df['Dst_Pi_PZ_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_X
+        piDst_Y=df['Dst_Pi_PX_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Y
+        piDst_Z=df['Dst_Pi_PY_TRUE'][i]*dis/df['Dst_Pi_P_TRUE'][i]+Dst_Z
+        piDstst_X=df['Dstst_Pi_PZ_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_X
+        piDstst_Y=df['Dstst_Pi_PX_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Y
+        piDstst_Z=df['Dstst_Pi_PY_TRUE'][i]*dis/df['Dstst_Pi_P_TRUE'][i]+Dst_Z
+        coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,,Dstst_X,Dstst_Y,Dstst_Z,
+               D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+               piDstst_X,piDstst_Y,piDstst_Z,
+               piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+               pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
+    return coord
 ############################################################################
 app.layout = html.Div(children=[
     html.Div([
@@ -442,24 +523,28 @@ Input('dropdown-file','value')])
 def drawangle(selection,choice,filename):
 
     if filename=='dh_D0':
+        df=dh_D0
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_D0)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
+        df=dh_Dst
         particle_list=particles(dh_Dst)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
+        df=dh_2420
         particle_list=particles(dh_2420)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2420)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
+        df=dh_2460
         particle_list=particles(dh_2460)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2460)
@@ -504,9 +589,22 @@ def drawangle(selection,choice,filename):
 
         else:
             COM=LorentzVector(df[choice+'_PX_TRUE'],df[choice+'_PY_TRUE'],df[choice+'_PZ_TRUE'],df[choice+'_E_TRUE'])
-            liste_part=change_frame(COM)
-            [newB,newtau,newD0,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
-            newW=W.boost(-COM.boostp3)
+            liste_part=change_frame(COM)    
+            if filename=='dh_D0':
+                [newB,newW,newD0,newtau,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+
+            elif filename=='dh_Dst':
+                [newB,newW,newDst,newD0,newtau,newnuB,newK,newpiDst,newpiK,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+
+            elif filename=='dh_2420':
+
+                [newB,newW,newD0,newtau,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+
+            elif filename=='dh_2460':
+
+                [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=liste_part
+    
+            
 
         if choice=='D0':
             angleD0x,angleD0y,angleD0z=(0,0,0)
@@ -701,24 +799,28 @@ def update_output3(value):
 def plot_phase_space(rangest,rangel,rangechi,filename):
 
     if filename=='dh_D0':
+        df=dh_D0
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_D0)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
+        df=dh_Dst
         particle_list=particles(dh_Dst)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
+        df=dh_2420
         particle_list=particles(dh_2420)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2420)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
+        df=dh_2460
         particle_list=particles(dh_2460)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2460)
@@ -766,24 +868,28 @@ Input('dropdown-file','value')])
 
 def drophist(choice,filename):
     if filename=='dh_D0':
+        df=dh_D0
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_D0)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
+        df=dh_Dst
         particle_list=particles(dh_Dst)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
+        df=dh_2420
         particle_list=particles(dh_2420)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2420)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
+        df=dh_2460
         particle_list=particles(dh_2460)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2460)
@@ -796,7 +902,7 @@ def drophist(choice,filename):
     if choice=='ld':
         return {'data':[go.Histogram(x=costhetal)],'layout':{'title':'costhetal','paper_bgcolor' : '#F4F4F8', 'plot_bgcolor' : '#F4F4F8'}}
     if choice=='q2':
-        q=B-D0
+        q=W
         q2=q.mag2
         return {'data':[go.Histogram(x=q2)],'layout':{'title':'q2','paper_bgcolor' : '#F4F4F8', 'plot_bgcolor' : '#F4F4F8'}}
 
@@ -815,24 +921,28 @@ Input('dropdown-file','value')])
 def drawevent(selection,radio,frame,filename):
 
     if filename=='dh_D0':
+        df=dh_D0
         particle_list=particles(dh_D0)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_D0)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
+        df=dh_Dst
         particle_list=particles(dh_Dst)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
+        df=dh_2420
         particle_list=particles(dh_2420)
-        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2420)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
+        df=dh_2460
         particle_list=particles(dh_2460)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_2460)
@@ -864,42 +974,36 @@ def drawevent(selection,radio,frame,filename):
 
                 if frame=='lab':
 
-                    PV_X,PV_Y,PV_Z=(df['B_Ori_z_TRUE'][i],df['B_Ori_x_TRUE'][i],df['B_Ori_y_TRUE'][i])
-                    B_X,B_Y,B_Z=(df['B_End_z_TRUE'][i],df['B_End_x_TRUE'][i],df['B_End_y_TRUE'][i])
-                    D0_X,D0_Y,D0_Z=(df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i])
-                    tau_X,tau_Y,tau_Z=[df['Tau_End_z_TRUE'][i],df['Tau_End_x_TRUE'][i],df['Tau_End_y_TRUE'][i]]
-                    nu_X=df['B_nu_PZ_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_X
-                    nu_Y=df['B_nu_PX_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Y
-                    nu_Z=df['B_nu_PY_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Z
-                    K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
-                    K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
-                    K_Z=df['D0_K_PY_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Z
+                    coord=coordinates(df)
 
-                    piD0_X=df['D0_Pi_PZ_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_X
-                    piD0_Y=df['D0_Pi_PX_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Y
-                    piD0_Z=df['D0_Pi_PY_TRUE'][i]*dis/df['D0_Pi_P_TRUE'][i]+D0_Z
+                    if df==dh_D0:
+                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piD0_X,piD0_Y,piD0_Z,pitau1_X,pitau1_Y,pitau1_Z,
+                        pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
+                    if df==dh_Dst:
+                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,
+                        D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+                        piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+                        pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
 
-                    pitau1_X=df['Tau_Pi1_PZ_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_X
-                    pitau1_Y=df['Tau_Pi1_PX_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Y
-                    pitau1_Z=df['Tau_Pi1_PY_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_Z
-
-                    pitau2_X=df['Tau_Pi2_PZ_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_X
-                    pitau2_Y=df['Tau_Pi2_PX_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Y
-                    pitau2_Z=df['Tau_Pi2_PY_TRUE'][i]*dis/df['Tau_Pi2_P_TRUE'][i]+tau_Z
-                    pitau3_X=df['Tau_Pi3_PZ_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_X
-                    pitau3_Y=df['Tau_Pi3_PX_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Y
-                    pitau3_Z=df['Tau_Pi3_PY_TRUE'][i]*dis/df['Tau_Pi3_P_TRUE'][i]+tau_Z
-                    nutau_X=df['Tau_nu_PZ_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_X
-                    nutau_Y=df['Tau_nu_PX_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Y
-                    nutau_Z=df['Tau_nu_PY_TRUE'][i]*dis/df['Tau_nu_P_TRUE'][i]+tau_Z
-
-
+                    if df==dh_2420 or df==dh_2460:
+                        [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,,Dstst_X,Dstst_Y,Dstst_Z,
+                        D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
+                        piDstst_X,piDstst_Y,piDstst_Z,
+                        piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
+                        pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
+                     
                 else:
-
-                    COM=LorentzVector(df[frame+'_PX_TRUE'],df[frame+'_PY_TRUE'],df[frame+'_PZ_TRUE'],df[frame+'_E_TRUE'])
+                    COM=com(df,frame)
                     liste_part=change_frame(COM,df)
+                    if filename=='dh_D0':
+                        [newB,newW,newD0,newtau,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
 
-                    [newB,newtau,newD0,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+                    elif filename=='dh_Dst':
+                        [newB,newW,newDst,newD0,newtau,newnuB,newK,newpiDst,newpiK,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+
+                    elif filename=='dh_2420' or filename=='dh_2460':
+                        [newB,newW,newDst,newDstst,newD0,newtau,newnuB,newK,newpiDst,newpiDstst,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
+            
                     PV_X,PV_Y,PV_Z=(0,0,0)
                     if frame=='B':
                         B_X,B_Y,B_Z=(0,0,0)
@@ -908,11 +1012,13 @@ def drawevent(selection,radio,frame,filename):
 
 
                     tau_X,tau_Y,tau_Z=[newtau.z[i]*df['Tau_FD_TRUE'][i]/newtau.p[i]+B_X,newtau.x[i]*df['Tau_FD_TRUE'][i]/newtau.p[i]+B_Y,newtau.y[i]*df['Tau_FD_TRUE'][i]/newtau.p[i]+B_Z]
-                    D0_X,D0_Y,D0_Z=[newD0.z[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_X,newD0.x[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Y,newD0.y[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Z]
-
                     nu_X=newnuB.z[i]*dis/newnuB.p[i]+B_X
                     nu_Y=newnuB.x[i]*dis/newnuB.p[i]+B_Y
                     nu_Z=newnuB.y[i]*dis/newnuB.p[i]+B_Z
+                    
+                    D0_X,D0_Y,D0_Z=[newD0.z[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_X,newD0.x[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Y,newD0.y[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Z]
+
+
                     K_X=newK.z[i]*dis/newK.p[i]+D0_X
                     K_Y=newK.x[i]*dis/newK.p[i]+D0_Y
                     K_Z=newK.y[i]*dis/newK.p[i]+D0_Z
