@@ -64,14 +64,6 @@ dh_2420=dht_2460.head(100)
 
 
 
-styles = {
-    'pre': {
-        'border': 'thin lightgrey solid',
-        'overflowX': 'scroll'
-    }
-}
-
-
 def particles(filename):
     if filename=='dh_D0':
         df=dh_D0
@@ -169,7 +161,7 @@ def calc_angles(filename):
     elif filename=='dh_2420': 
         particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-     elif filename=='dh_2460':
+    elif filename=='dh_2460':
         particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
     if filename=='dh_D0':
@@ -254,6 +246,7 @@ def calc_angles(filename):
         chi = np.arctan2(si,co)
         costhetast=unitDst.dot(unitDstst)
         costhetal=unitDstst.dot(unittau)
+        angles=[costhetast,costhetal,chi,nouvpi,nouvtau,nouvDst,nouvDstst,nouvnu]
     if filename=='dh_2420':
         nouvtau=tau.boost(-(tau+nuB).boostp3)
         nouvnu=nuB.boost(-(tau+nuB).boostp3)
@@ -279,9 +272,10 @@ def calc_angles(filename):
         chi = np.arctan2(si,co)
         costhetast=unitDst.dot(unitDstst)
         costhetal=unitDstst.dot(unittau)
-        angles=[costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]
+        angles=[costhetast,costhetal,chi,nouvpi,nouvtau,nouvDst,nouvDstst,nouvnu]
 
     return angles
+
 def com(filename,frame):
     if filename=='dh_D0':
         df=dh_D0
