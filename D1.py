@@ -370,10 +370,37 @@ app.layout = html.Div(children=[
 @app.callback(
 Output('show-angle', 'figure'),
 [Input('phase-space', 'clickData'),
-Input('dropdown-angle','value')])
+Input('dropdown-angle','value'),
+Input('dropdown-file','value')])
 
 
-def drawangle(selection,choice):
+
+
+def drawangle(selection,choice,filename):
+    if filename=='dh_D0':
+        particle_list=particles(dh_D0)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_Dst':
+        particle_list=particles(dh_Dst)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2420':
+        particle_list=particles(dh_2420)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2460':
+        particle_list=particles(dh_2460)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
     if selection is None:
         return {}
     else:
@@ -612,6 +639,26 @@ def plot_phase_space(rangest,rangel,rangechi,filename):
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
         [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_Dst':
+        particle_list=particles(dh_Dst)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2420':
+        particle_list=particles(dh_2420)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2460':
+        particle_list=particles(dh_2460)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+
     layout1=go.Layout(
         hovermode = 'closest',
         paper_bgcolor = '#F4F4F8',
@@ -648,8 +695,32 @@ def plot_phase_space(rangest,rangel,rangechi,filename):
 
 @app.callback(
 Output('histog', 'figure'),
-[Input('dropdown-dist','value')])
-def drophist(choice):
+[Input('dropdown-dist','value'),
+Input('dropdown-file','value')])
+def drophist(choice,filename):
+    if filename=='dh_D0':
+        particle_list=particles(dh_D0)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_Dst':
+        particle_list=particles(dh_Dst)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2420':
+        particle_list=particles(dh_2420)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2460':
+        particle_list=particles(dh_2460)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles    
     if choice=='chid':
         return {'data':[go.Histogram(x=chi)],'layout':{'title':'chi','paper_bgcolor' : '#F4F4F8', 'plot_bgcolor' : '#F4F4F8'}}
     if choice=='std':
@@ -661,25 +732,43 @@ def drophist(choice):
         q2=q.mag2
         return {'data':[go.Histogram(x=q2)],'layout':{'title':'q2','paper_bgcolor' : '#F4F4F8', 'plot_bgcolor' : '#F4F4F8'}}
 
-
-
-
 @app.callback(
     Output('click-result', 'children'),
     [Input('phase-space', 'clickData')])
 def display_click_data(clickData):
     return json.dumps(clickData, indent=2)
 
-
-
-
-
 @app.callback(
 Output('frame-graph', 'figure'),
 [Input('phase-space', 'clickData'),
 Input('which-D','value'),
-Input('dropdown-frame','value')])
-def drawevent(selection,radio,frame):
+Input('dropdown-frame','value'),
+Input('dropdown-file','value')])
+def drawevent(selection,radio,frame,filename):
+    if filename=='dh_D0':
+        particle_list=particles(dh_D0)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_Dst':
+        particle_list=particles(dh_Dst)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2420':
+        particle_list=particles(dh_2420)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
+    elif filename=='dh_2460':
+        particle_list=particles(dh_2460)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
+
     if selection is None:
         return {}
     else:
@@ -973,7 +1062,6 @@ def drawevent(selection,radio,frame):
                         )
                 )
 
-#indent 4 here ....
                 elif radio=='YZ':
                     traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
                     traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
