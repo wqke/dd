@@ -165,9 +165,9 @@ app.layout = html.Div(children=[
                     
                 dcc.Dropdown(
                     options=[{'label': 'D0', 'value': 'dh_D0'},
-                                        {'label': 'D*-', 'value': 'dh_Dst'},
-                                        {'label': 'D1(2420)0', 'value': 'dh_2420'},
-                                        {'label': 'D2*(2460)0', 'value': 'dh_2460'}],
+                                {'label': 'D*-', 'value': 'dh_Dst'},
+                                {'label': 'D1(2420)0', 'value': 'dh_2420'},
+                                {'label': 'D2*(2460)0', 'value': 'dh_2460'}],
 
                      value='dh_Dst',
                      id='dropdown-file'
@@ -193,7 +193,7 @@ app.layout = html.Div(children=[
                                         'marginRight': '10px'
                                 }
                          ),
-                html.Div([       #4 indent !!!!!!!!!!!!!!
+                html.Div([     
                 dcc.RangeSlider(
                     id='choose-thetast',
                     min=-1,
@@ -377,9 +377,9 @@ def drawangle(selection,choice):
     if selection is None:
         return {}
     else:
-            i=selection['points'][0]['pointNumber']
+        i=selection['points'][0]['pointNumber']
 
-            if choice=='two':
+        if choice=='two':
             angleBx,angleBy,angleBz=(0,0,0)
             angleD0x,angleD0y,angleD0z=(nouvD0.z[i]/nouvD0.p[i],nouvD0.x[i]/nouvD0.p[i],nouvD0.y[i]/nouvD0.p[i])
             angleKx,angleKy,angleKz=(nouvK.z[i]/nouvK.p[i]+angleD0x,nouvK.x[i]/nouvK.p[i]+angleD0y,nouvK.y[i]/nouvK.p[i]+angleD0z)
@@ -392,12 +392,12 @@ def drawangle(selection,choice):
             dash1=go.Scatter3d(x=[angleQx,d1x],y=[angleQy,d1y],z=[angleQz,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
             dash2=go.Scatter3d(x=[angleD0x,d2x],y=[angleD0y,d2y],z=[angleD0z,d2z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
             mesh1 = go.Mesh3d(x=[d1x,angletaux,angleQx],y=[d1y,angletauy,angleQy],z=[d1z,angletauz,angleQz],
-                    opacity=0.4,
-                        color='#3E3A3A')
+                opacity=0.4,
+                    color='#3E3A3A')
 
             mesh2 = go.Mesh3d(x=[d2x,angleKx,angleD0x],y=[d2y,angleKy,angleD0y],z=[d2z,angleKz,angleD0z],
-                    opacity=0.4,
-                    color='#3E3A3A')
+                opacity=0.4,
+                color='#3E3A3A')
             traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
             traceD0=go.Scatter3d(x=[angleBx,angleD0x],y=[angleBy,angleD0y],z=[angleBz,angleD0z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D0'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
@@ -604,9 +604,14 @@ def update_output3(value):
         dash.dependencies.Output('phase-space', 'figure'),
         [Input('choose-thetast', 'value'),
         Input('choose-thetal', 'value'),
-        Input('choose-chi', 'value')])
-def plot_phase_space(rangest,rangel,rangechi):
-
+        Input('choose-chi', 'value'),
+        Input('dropdown-file','value')])
+def plot_phase_space(rangest,rangel,rangechi,filename):
+    if filename=='dh_D0':
+        particle_list=particles(dh_D0)
+        [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
+        angles=calc_angles(B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau)
+        [costhetast,costhetal,chi]=angles
     layout1=go.Layout(
         hovermode = 'closest',
         paper_bgcolor = '#F4F4F8',
@@ -970,57 +975,57 @@ def drawevent(selection,radio,frame):
 
 #indent 4 here ....
                 elif radio=='YZ':
-                        traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
-                        traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
-                        tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
-                        tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
-                        traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
-                        tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                    traceB=go.Scatter(x=[PV_Z,B_Z],y=[PV_X,B_X],mode='lines+markers+text',text=['PV','B'],textposition='top center',line=dict(color='darkblue',width=2))
+                    traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracetau=go.Scatter(x=[B_Z,tau_Z],y=[B_X,tau_X],mode='lines+markers+text',text=['','tau'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracenuB=go.Scatter(x=[B_Z,nu_Z],y=[B_X,nu_X],mode='lines+markers+text',text=['','nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                    traceK=go.Scatter(x=[D0_Z,K_Z],y=[D0_X,K_X],mode='lines+markers+text',text=['','K'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                        tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
-                        tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracepitau1=go.Scatter(x=[tau_Z,pitau1_Z],y=[tau_X,pitau1_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracepitau2=go.Scatter(x=[tau_Z,pitau2_Z],y=[tau_X,pitau2_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                        tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracepitau3=go.Scatter(x=[tau_Z,pitau3_Z],y=[tau_X,pitau3_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                        tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
+                    tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
 
 
-                        layout_event = go.Layout(
-                                showlegend=False,
-                                paper_bgcolor = '#F4F4F8',
-                                plot_bgcolor = '#F4F4F8',
-                                xaxis=dict(
-                                title='Y direction [nm]',
-                                showgrid=True,
-                                zeroline=True,
-                                showline=True,
-                                mirror='ticks',
-                                gridcolor='#bdbdbd',
-                                gridwidth=2,
-                                zerolinecolor='#969696',
-                                zerolinewidth=4,
-                                linecolor='#636363',
-                                linewidth=6
-                                ),
-                                yaxis=dict(
-                                title='Z direction [nm]',
-                                showgrid=True,
-                                zeroline=True,
-                                showline=True,
-                                mirror='ticks',
-                                gridcolor='#bdbdbd',
-                                gridwidth=2,
-                                zerolinecolor='#969696',
-                                zerolinewidth=4,
-                                linecolor='#636363',
-                                linewidth=6
-                                )
+                    layout_event = go.Layout(
+                        showlegend=False,
+                        paper_bgcolor = '#F4F4F8',
+                        plot_bgcolor = '#F4F4F8',
+                        xaxis=dict(
+                        title='Y direction [nm]',
+                        showgrid=True,
+                        zeroline=True,
+                        showline=True,
+                        mirror='ticks',
+                        gridcolor='#bdbdbd',
+                        gridwidth=2,
+                        zerolinecolor='#969696',
+                        zerolinewidth=4,
+                        linecolor='#636363',
+                        linewidth=6
+                        ),
+                        yaxis=dict(
+                        title='Z direction [nm]',
+                        showgrid=True,
+                        zeroline=True,
+                        showline=True,
+                        mirror='ticks',
+                        gridcolor='#bdbdbd',
+                        gridwidth=2,
+                        zerolinecolor='#969696',
+                        zerolinewidth=4,
+                        linecolor='#636363',
+                        linewidth=6
+                        )
                         )
 
 
 
-                data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau]
-                return {'data': data_event, 'layout':layout_event
+    data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau]
+    return {'data': data_event, 'layout':layout_event
 
                                 }
 
