@@ -80,8 +80,16 @@ styles = {
 }
 
 
-def particles(df):
-    if df==dh_D0:
+def particles(filename):
+    if filename=='dh_D0':
+        df=dh_D0
+    if filename=='dh_Dst':
+        df=dh_Dst
+    if filename=='dh_2460':
+        df=dh_2460
+    if filename=='dh_2420':
+        df=dh_2420
+    if filename=='dh_D0':
         B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
         W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
         D0=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
@@ -95,7 +103,7 @@ def particles(df):
         nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
         particle_list=[B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]
  
-    elif df==dh_Dst:
+    elif filename=='dh_Dst':
         B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
         W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
         Dst=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
@@ -110,7 +118,7 @@ def particles(df):
         pitau3=LorentzVector(df['Tau_Pi3_PX_TRUE'],df['Tau_Pi3_PY_TRUE'],df['Tau_Pi3_PZ_TRUE'],df['Tau_Pi3_E_TRUE'])
         nutau=LorentzVector(df['Tau_nu_PX_TRUE'],df['Tau_nu_PY_TRUE'],df['Tau_nu_PZ_TRUE'],df['Tau_nu_E_TRUE'])
         particle_list=[B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]
-    elif df==dh_2460 or df==dh_2420:
+    elif filename=='dh_2460' or filename=='dh_2420':
         B=LorentzVector(df['B_PX_TRUE'],df['B_PY_TRUE'],df['B_PZ_TRUE'],df['B_E_TRUE'])
         W=LorentzVector(df['W_PX_TRUE'],df['W_PY_TRUE'],df['W_PZ_TRUE'],df['W_E_TRUE'])
         Dstst=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])
@@ -129,9 +137,9 @@ def particles(df):
         particle_list=[B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]      
     return particle_list
 
-def change_frame(COM,df):
+def change_frame(COM,filename):
     res=[]
-    list_particles=particles(df)
+    list_particles=particles(filename)
     for i in range(len(list_particles)):
         newvec=list_particles[i].boost(-COM.boostp3)
         res.append(newvec)
@@ -146,7 +154,7 @@ def calc_angles(df):
     unitnu=(nouvnu.p3).unit
     nnewtau=tau.boost(-B.boostp3)
     unitau=nnewtau.unit
-    if df==dh_D0:
+    if df=='dh_D0':
         nouvpi=piD0.boost(-(piD0+K).boostp3)
         nouvK=K.boost(-(piD0+K).boostp3)
         nouvD0=D0.boost(-B.boostp3)
@@ -167,7 +175,7 @@ def calc_angles(df):
         chi = np.arctan2(si,co)
 
         angles=[costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]
-    if df==dh_Dst:
+    if df=='dh_Dst':
         nouvpi=piDst.boost(-(piDst+D0).boostp3)
         nouvD0=D0.boost(-(piDst+D0).boostp3)
         nouvDst=D0.boost(-B.boostp3)
@@ -187,7 +195,8 @@ def calc_angles(df):
 
         angles=[costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]
         
-    if df==dh_2460 or df==dh_2420:
+    if df=='dh_2460' or df=='dh_2420':
+        
         nouvpi=piDstst.boost(-(piDstst+Dst).boostp3)
         nouvDst=D0.boost(-(piDstst+Dst).boostp3)
         nouvDstst=Dstst.boost(-B.boostp3)
@@ -208,19 +217,36 @@ def calc_angles(df):
         angles=[costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]
 
     return angles
-def com(df,frame):
+def com(filename,frame):
+    if filename=='dh_D0':
+        df=dh_D0
+    if filename=='dh_Dst':
+        df=dh_Dst
+    if filename=='dh_2460':
+        df=dh_2460
+    if filename=='dh_2420':
+        df=dh_2420
+        
     if frame=='B' or frame=='W':
         COM=LorentzVector(df[frame+'_PX_TRUE'],df[frame+'_PY_TRUE'],df[frame+'_PZ_TRUE'],df[frame+'_E_TRUE'])
     elif frame=='D0':
-        if df==dh_D0:
+        if filename=='dh_D0':
             COM=LorentzVector(df['D0_PX_TRUE'],df['D0_PY_TRUE'],df['D0_PZ_TRUE'],df['D0_E_TRUE'])
-        elif df==dh_Dst:
+        elif filename=='dh_Dst':
             COM=LorentzVector(df['Dst_PX_TRUE'],df['Dst_PY_TRUE'],df['Dst_PZ_TRUE'],df['Dst_E_TRUE'])
-        elif df==dh_2460 or df==dh_2420:
+        elif filename=='dh_2460' or filename=='dh_2420':
             COM=LorentzVector(df['Dstst_PX_TRUE'],df['Dstst_PY_TRUE'],df['Dstst_PZ_TRUE'],df['Dstst_E_TRUE'])        
     return COM
 
-def coordinates(df):
+def coordinates(filename):
+    if filename=='dh_D0':
+        df=dh_D0
+    if filename=='dh_Dst':
+        df=dh_Dst
+    if filename=='dh_2460':
+        df=dh_2460
+    if filename=='dh_2420':
+        df=dh_2420
     PV_X,PV_Y,PV_Z=(df['B_Ori_z_TRUE'][i],df['B_Ori_x_TRUE'][i],df['B_Ori_y_TRUE'][i])
     B_X,B_Y,B_Z=(df['B_End_z_TRUE'][i],df['B_End_x_TRUE'][i],df['B_End_y_TRUE'][i])
     pitau1_X=df['Tau_Pi1_PZ_TRUE'][i]*dis/df['Tau_Pi1_P_TRUE'][i]+tau_X
@@ -239,7 +265,7 @@ def coordinates(df):
     nu_X=df['B_nu_PZ_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_X
     nu_Y=df['B_nu_PX_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Y
     nu_Z=df['B_nu_PY_TRUE'][i]*dis/df['B_nu_P_TRUE'][i]+B_Z
-    if df==dh_D0:
+    if filename=='dh_D0':
         D0_X,D0_Y,D0_Z=(df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i])
         K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
         K_Y=df['D0_K_PX_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_Y
@@ -252,7 +278,7 @@ def coordinates(df):
 
         coord=[PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piD0_X,piD0_Y,piD0_Z,pitau1_X,pitau1_Y,pitau1_Z,
                pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
-    if df==dh_Dst:
+    if filename=='dh_Dst':
         Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
         D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
         K_X=df['D0_K_PZ_TRUE'][i]*dis/df['D0_K_P_TRUE'][i]+D0_X
@@ -270,7 +296,7 @@ def coordinates(df):
                piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
                pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]
     
-    if df==dh_2420 or df==dh_2460:
+    if filename=='dh_2420' or filename=='dh_2460':
         Dstst_X,Dstst_Y,Dstst_Z=(df['Dstst_End_z_TRUE'][i],df['Dstst_End_x_TRUE'][i],df['Dstst_End_y_TRUE'][i])
         Dst_X,Dst_Y,Dst_Z=(df['Dst_End_z_TRUE'][i],df['Dst_End_x_TRUE'][i],df['Dst_End_y_TRUE'][i])
         D0_X,D0_Y,D0_Z=[df['D0_End_z_TRUE'][i],df['D0_End_x_TRUE'][i],df['D0_End_y_TRUE'][i]]
@@ -294,36 +320,36 @@ def coordinates(df):
     return coord
 
 def calc_xrange(df):
-    if df==dh_D0:
+    if df=='dh_D0':
         xrange=max(abs([PV_X,B_X,D0_X,tau_X,nu_X,K_X,piD0_X,pitau1_X,
                pitau2_X,pitau3_X,nutau_X]))
-    if df==dh_Dst:
+    if df=='dh_Dst':
         xrange=max(abs([PV_X,B_X,Dst_X,D0_X,tau_X,nu_X,K_X,piDst_X,
                piK_X,pitau1_X,pitau2_X,pitau3_X,nutau_X]))
-    if df==dh_2460 or df==dh_2420:
+    if df=='dh_2460' or df=='dh_2420':
         xrange=max(abs([Dst_X,Dstst_X,D0_X,tau_X,nu_X,K_X,piDst_X,piDstst_X,piK_X,pitau1_X,
                pitau2_X,pitau3_X,nutau_X]))
     return xrange
 
 def calc_yrange(df):
-    if df==dh_D0:
+    if df=='dh_D0':
         yrange=max(abs([PV_Y,B_X,D0_Y,tau_Y,nu_Y,K_Y,piD0_Y,pitau1_Y,
                pitau2_Y,pitau3_Y,nutau_Y]))
-    if df==dh_Dst:
+    if df=='dh_Dst':
         yrange=max(abs([PV_Y,B_Y,Dst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,
                piK_Y,pitau1_Y,pitau2_Y,pitau3_Y,nutau_Y]))
-    if df==dh_2460 or df==dh_2420:
+    if df=='dh_2460' or df=='dh_2420':
         yrange=max(abs([Dst_Y,Dstst_Y,D0_Y,tau_Y,nu_Y,K_Y,piDst_Y,piDstst_Y,piK_Y,pitau1_Y,
                pitau2_Y,pitau3_Y,nutau_Y]))
     return yrange
 def calc_zrange(df):
-    if df==dh_D0:
+    if df=='dh_D0':
         zrange=max(abs([PV_Z,B_X,D0_Z,tau_Z,nu_Z,K_Z,piD0_Z,pitau1_Z,
                pitau2_Z,pitau3_Z,nutau_Z]))
-    if df==dh_Dst:
+    if df=='dh_Dst':
         zrange=max(abs([PV_Z,B_Z,Dst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,
                piK_Z,pitau1_Z,pitau2_Z,pitau3_Z,nutau_Z]))
-    if df==dh_2460 or df==dh_2420:
+    if df=='dh_2460' or df=='dh_2420':
         zrange=max(abs([Dst_Z,Dstst_Z,D0_Z,tau_Z,nu_Z,K_Z,piDst_Z,piDstst_Z,piK_Z,pitau1_Z,
                pitau2_Z,pitau3_Z,nutau_Z]))
     return zrange
@@ -835,30 +861,30 @@ def plot_phase_space(rangest,rangel,rangechi,filename):
 
     if filename=='dh_D0':
         df=dh_D0
-        particle_list=particles(dh_D0)
+        particle_list=particles(filename)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_D0)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         df=dh_Dst
-        particle_list=particles(dh_Dst)
+        particle_list=particles(filename)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         df=dh_2420
-        particle_list=particles(dh_2420)
+        particle_list=particles(filename)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2420)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         df=dh_2460
-        particle_list=particles(dh_2460)
+        particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2460)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
         
 
@@ -904,30 +930,30 @@ Input('dropdown-file','value')])
 def drophist(choice,filename):
     if filename=='dh_D0':
         df=dh_D0
-        particle_list=particles(dh_D0)
+        particle_list=particles(filename)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_D0)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         df=dh_Dst
-        particle_list=particles(dh_Dst)
+        particle_list=particles(filename)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
         angles=calc_angles(dh_Dst)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         df=dh_2420
-        particle_list=particles(dh_2420)
+        particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2420)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         df=dh_2460
-        particle_list=particles(dh_2460)
+        particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2460)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
         
     if choice=='chid':
@@ -957,30 +983,30 @@ def drawevent(selection,radio,frame,filename):
 
     if filename=='dh_D0':
         df=dh_D0
-        particle_list=particles(dh_D0)
+        particle_list=particles(filename)
         [B,W,D0,tau,nuB,K,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_D0)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvK,nouvD0]=angles
 
     elif filename=='dh_Dst':
         df=dh_Dst
-        particle_list=particles(dh_Dst)
+        particle_list=particles(filename)
         [B,W,Dst,D0,tau,nuB,K,piDst,piK,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_Dst)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvD0,nouvDst]=angles
 
     elif filename=='dh_2420':
         df=dh_2420
-        particle_list=particles(dh_2420)
+        particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2420)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles
 
     elif filename=='dh_2460':
         df=dh_2460
-        particle_list=particles(dh_2460)
+        particle_list=particles(filename)
         [B,W,Dst,Dstst,D0,tau,nuB,K,piDst,piDstst,piD0,pitau1,pitau2,pitau3,nutau]=particle_list
-        angles=calc_angles(dh_2460)
+        angles=calc_angles(filename)
         [costhetast,costhetal,chi,nouvpi,nouvDst,nouvDstst]=angles 
         
 
@@ -1009,18 +1035,18 @@ def drawevent(selection,radio,frame,filename):
 
                 if frame=='lab':
 
-                    coord=coordinates(df)
+                    coord=coordinates(filename)
 
-                    if df==dh_D0:
+                    if filename=='dh_D0':
                         [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piD0_X,piD0_Y,piD0_Z,pitau1_X,pitau1_Y,pitau1_Z,
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
-                    if df==dh_Dst:
+                    if filename=='dh_Dst':
                         [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,
                         D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
                         piK_X,piK_Y,piK_Z,pitau1_X,pitau1_Y,pitau1_Z,
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
 
-                    if df==dh_2420 or df==dh_2460:
+                    if filename=='dh_2420' or filename=='dh_2460':
                         [PV_X,PV_Y,PV_Z,B_X,B_Y,B_Z,Dst_X,Dst_Y,Dst_Z,Dstst_X,Dstst_Y,Dstst_Z,
                         D0_X,D0_Y,D0_Z,tau_X,tau_Y,tau_Z,nu_X,nu_Y,nu_Z,K_X,K_Y,K_Z,piDst_X,piDst_Y,piDst_Z,
                         piDstst_X,piDstst_Y,piDstst_Z,
@@ -1028,8 +1054,8 @@ def drawevent(selection,radio,frame,filename):
                         pitau2_X,pitau2_Y,pitau2_Z,pitau3_X,pitau3_Y,pitau3_Z,nutau_X,nutau_Y,nutau_Z]=coord
                      
                 else:
-                    COM=com(df,frame)
-                    liste_part=change_frame(COM,df)
+                    COM=com(filename,frame)
+                    liste_part=change_frame(COM,filename)
                     if filename=='dh_D0':
                         [newB,newW,newD0,newtau,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
 
@@ -1072,16 +1098,16 @@ def drawevent(selection,radio,frame,filename):
                     piD0_Y=newpiD0.x[i]*dis/newpiD0.p[i]+D0_Y
                     piD0_Z=newpiD0.y[i]*dis/newpiD0.p[i]+D0_Z
 
-                    if df==dh_D0:                    
+                    if filename=='dh_D0':                    
                         D0_X,D0_Y,D0_Z=[newD0.z[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_X,newD0.x[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Y,newD0.y[i]*df['D0_FD_TRUE'][i]/newD0.p[i]+B_Z]
 
-                    if df==dh_Dst:                    
+                    if filename=='dh_Dst':                    
                         Dst_X,Dst_Y,Dst_Z=[newDst.z[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+B_X,newDst.x[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+B_Y,newDst.y[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+B_Z]
                         piDst_X=newpiDst.z[i]*dis/newpiDst.p[i]+Dst_X
                         piDst_Y=newpiDst.x[i]*dis/newpiDst.p[i]+Dst_Y
                         piDst_Z=newpiDst.y[i]*dis/newpiDst.p[i]+Dst_Z
                     
-                    if df==dh_2460 or df==dh_2420:
+                    if filename=='dh_2460' or filename=='dh_2420':
                         Dstst_X,Dstst_Y,Dstst_Z=[newDstst.z[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_X,newDstst.x[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Y,newDstst.y[i]*df['Dstst_FD_TRUE'][i]/newDstst.p[i]+B_Z]
                         Dst_X,Dst_Y,Dst_Z=[newDst.z[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_X,newDst.x[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Y,newDst.y[i]*df['Dst_FD_TRUE'][i]/newDst.p[i]+Dstst_Z]
                         piDst_X=newpiDst.z[i]*dis/newpiDst.p[i]+Dst_X
@@ -1108,14 +1134,14 @@ def drawevent(selection,radio,frame,filename):
                     traceK=go.Scatter3d(x=[D0_X,K_X],y=[D0_Y,K_Y],z=[D0_Z,K_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color =colorval(K),width=3))
                     tracepiD0=go.Scatter3d(x=[D0_X,piD0_X],y=[D0_Y,piD0_Y],z=[D0_Z,piD0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piD0),width=3))
                       
-                    if df==dh_D0:
+                    if filename=='dh_D0':
                         traceD0=go.Scatter3d(x=[B_X,D0_X],y=[B_Y,D0_Y],z=[B_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0)))
-                    if df==dh_Dst:
+                    if filename=='dh_Dst':
                         tracepiK=go.Scatter3d(x=[D0_X,piK_X],y=[D0_Y,piK_Y],z=[D0_Z,piK_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color=colorval(piK),width = 3))
                         tracepiDst=go.Scatter3d(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],z=[Dst_Z,piDst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
                         traceDst=go.Scatter3d(x=[B_X,Dst_X],y=[B_Y,Dst_Y],z=[B_Z,Dst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D*'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                         traceD0=go.Scatter3d(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],z=[Dst_Z,D0_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D0'],textposition='top left',line = dict(width=3,color=colorval(D0)))
-                    if df==dh_2420 or df==dh_2460:
+                    if filename=='dh_2420' or filename=='dh_2460':
                         tracepiDstst=go.Scatter3d(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],z=[Dstst_Z,piDstst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
                         traceDstst=go.Scatter3d(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],z=[B_Z,Dstst_Z],mode='lines+markers+text',marker=dict(size=5,color="rgb(5,200,5)",opacity=0.8,cmin=cmin,cmax=cmax),text=['', 'D**'],textposition='top left',line = dict(width=3,color=colorval(D0)))
                         tracepiDst=go.Scatter3d(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],z=[Dst_Z,piDst_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = colorval(piDst),width = 3))
@@ -1208,16 +1234,16 @@ def drawevent(selection,radio,frame,filename):
 
                     tracenutau=go.Scatter(x=[tau_X,nutau_X],y=[tau_Y,nutau_Y],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_D0:
+                    if filename=='dh_D0':
                         traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_Dst:
+                    if filename=='dh_Dst':
                         tracepiK=go.Scatter(x=[D0_X,piK_X],y=[D0_Y,piK_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_X,Dst_X],y=[B_Y,Dst_Y],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_2420 or df==dh_2460:
+                    if filename=='dh_2420' or filename=='dh_2460':
                         tracepiDstst=go.Scatter(x=[Dstst_X,piDstst_X],y=[Dstst_Y,piDstst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDstst=go.Scatter(x=[B_X,Dstst_X],y=[B_Y,Dstst_Y],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_X,piDst_X],y=[Dst_Y,piDst_Y],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
@@ -1272,16 +1298,16 @@ def drawevent(selection,radio,frame,filename):
                     tracepiD0=go.Scatter(x=[D0_Y,piD0_Y],y=[D0_Z,piD0_Z],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
                     tracenutau=go.Scatter(x=[tau_Y,nutau_Y],y=[tau_Z,nutau_Z],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_D0:
+                    if filename=='dh_D0':
                         traceD0=go.Scatter(x=[B_X,D0_X],y=[B_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_Dst:
+                    if filename=='dh_Dst':
                         tracepiK=go.Scatter(x=[D0_Y,piK_Y],y=[D0_Z,piK_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Y,piDst_Y],y=[Dst_Z,piDst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_Y,Dst_Y],y=[B_Z,Dst_Z],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceD0=go.Scatter(x=[Dst_X,D0_X],y=[Dst_Y,D0_Y],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_2420 or df==dh_2460:
+                    if filename=='dh_2420' or filename=='dh_2460':
                         tracepiDstst=go.Scatter(x=[Dstst_Y,piDstst_Y],y=[Dstst_Z,piDstst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDstst=go.Scatter(x=[B_Y,Dstst_Y],y=[B_Z,Dstst_Z],mode='lines+markers+text',text=['','D**'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Y,piDst_Y],y=[Dst_Z,piDst_Z],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
@@ -1336,16 +1362,16 @@ def drawevent(selection,radio,frame,filename):
                     tracepiD0=go.Scatter(x=[D0_Z,piD0_Z],y=[D0_X,piD0_X],mode='lines+markers+text',text=['', 'pi'],textposition='top center',line=dict(color='darkblue',width=2))
                     tracenutau=go.Scatter(x=[tau_Z,nutau_Z],y=[tau_X,nutau_X],mode='lines+markers+text',text=['', 'nu'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_D0:
+                    if filename=='dh_D0':
                         traceD0=go.Scatter(x=[B_Z,D0_Z],y=[B_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
-                    if df==dh_Dst:
+                    if filename=='dh_Dst':
                         traceD0=go.Scatter(x=[Dst_Z,D0_Z],y=[Dst_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
 
                         tracepiK=go.Scatter(x=[D0_Z,piK_Z],y=[D0_X,piK_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDst=go.Scatter(x=[Dst_Z,piDst_Z],y=[Dst_X,piDst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[B_Z,Dst_Z],y=[B_X,Dst_X],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
-                    if df==dh_2420 or df==dh_2460:
+                    if filename=='dh_2420' or filename=='dh_2460':
                         traceD0=go.Scatter(x=[Dst_Z,D0_Z],y=[Dst_X,D0_X],mode='lines+markers+text',text=['','D0'],textposition='top center',line=dict(color='darkblue',width=2))
                         traceDst=go.Scatter(x=[Dstst_Z,Dst_Z],y=[Dstst_X,Dst_X],mode='lines+markers+text',text=['','D*'],textposition='top center',line=dict(color='darkblue',width=2))
                         tracepiDstst=go.Scatter(x=[Dstst_Z,piDstst_Z],y=[Dstst_X,piDstst_X],mode='lines+markers+text',text=['','pi'],textposition='top center',line=dict(color='darkblue',width=2))
@@ -1384,11 +1410,11 @@ def drawevent(selection,radio,frame,filename):
                         )
                         )
 
-    if df==dh_D0:
+    if filename=='dh_D0':
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau]
-    if df==dh_Dst:
+    if filename=='dh_Dst':
         data_event=[traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
-    if df==dh_2460 or df==dh_2420:
+    if filename=='dh_2460' or filename=='dh_2420':
         data_event=[traceDstst,tracepiDstst,traceB,tracetau,traceD0,tracenuB,traceK,tracepiD0,tracepitau1,tracepitau2,tracepitau3,tracenutau,traceDst,tracepiDst,tracepiK]
     
     return {'data': data_event, 'layout':layout_event
