@@ -1119,9 +1119,9 @@ def drawevent(selection,radio,frame,filename):
                         piDstst_Y=newpiDstst.x[i]*dis/newpiDstst.p[i]+Dstst_Y
                         piDstst_Z=newpiDstst.y[i]*dis/newpiDstst.p[i]+Dstst_Z
                    
-                xrange=calc_xrange(df)
-                yrange=calc_yrange(df)
-                zrange=calc_zrange(df)
+                xrange=calc_xrange(filename)
+                yrange=calc_yrange(filename)
+                zrange=calc_zrange(filename)
                 
                 if radio=='3D':
                     traceB=go.Scatter3d(x=[PV_X,B_X],y=[PV_Y,B_Y],z=[PV_Z,B_Z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['PV', ''],textposition='top left',line = dict(color =colorval(B),width=3))
