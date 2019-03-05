@@ -399,168 +399,171 @@ def drawangle(selection,choice):
 
         if choice=='two':
             angleBx,angleBy,angleBz=(0,0,0)
-            angleD0x,angleD0y,angleD0z=(nouvD0.z[i]/nouvD0.p[i],nouvD0.x[i]/nouvD0.p[i],nouvD0.y[i]/nouvD0.p[i])
-            angleKx,angleKy,angleKz=(nouvK.z[i]/nouvK.p[i]+angleD0x,nouvK.x[i]/nouvK.p[i]+angleD0y,nouvK.y[i]/nouvK.p[i]+angleD0z)
-            anglepix,anglepiy,anglepiz=(-nouvpi.z[i]/nouvpi.p[i]+angleD0x,-nouvpi.x[i]/nouvpi.p[i]+angleD0y,-nouvpi.y[i]/nouvpi.p[i]+angleD0z)
-            angleQx,angleQy,angleQz=(-angleD0x,-angleD0y,-angleD0z)
+            angleDststx,angleDststy,angleDststz=(nouvDstst.z[i]/nouvDstst.p[i],nouvDstst.x[i]/nouvDstst.p[i],nouvDstst.y[i]/nouvDstst.p[i])
+            angleDstx,angleDsty,angleDstz=(nouvDst.z[i]/nouvDst.p[i]+angleDststx,nouvDst.x[i]/nouvDst.p[i]+angleDststy,nouvDst.y[i]/nouvDst.p[i]+angleDststz)
+            
+	    anglepix,anglepiy,anglepiz=(nouvpi.z[i]/nouvpi.p[i]+angleDststx,nouvpi.x[i]/nouvpi.p[i]+angleDststy,nouvpi.y[i]/nouvpi.p[i]+angleDststz)
+            
+	    angleQx,angleQy,angleQz=(-angleDststx,-angleDststy,-angleDststz)
+		
             angletaux,angletauy,angletauz=(angleQx+nouvtau.z[i]/nouvtau.p[i],angleQy+nouvtau.x[i]/nouvtau.p[i],angleQz+nouvtau.y[i]/nouvtau.p[i])
             anglenux,anglenuy,anglenuz=(angleQx-nouvtau.z[i]/nouvtau.p[i],angleQy-nouvtau.x[i]/nouvtau.p[i],angleQz-nouvtau.y[i]/nouvtau.p[i])   
             d1x,d1y,d1z=(2*angleQx,2*angleQy,2*angleQz)
-            d2x,d2y,d2z=(2*angleD0x,2*angleD0y,2*angleD0z)
+            d2x,d2y,d2z=(2*angleDststx,2*angleDststy,2*angleDststz)
             dash1=go.Scatter3d(x=[angleQx,d1x],y=[angleQy,d1y],z=[angleQz,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
-            dash2=go.Scatter3d(x=[angleD0x,d2x],y=[angleD0y,d2y],z=[angleD0z,d2z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
+            dash2=go.Scatter3d(x=[angleDststx,d2x],y=[angleDststy,d2y],z=[angleDststz,d2z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
 
 
             mesh1 = go.Mesh3d(x=[d1x,angletaux,angleQx],y=[d1y,angletauy,angleQy],z=[d1z,angletauz,angleQz],
                     opacity=0.4,
                     color='#3E3A3A')
 
-            mesh2 = go.Mesh3d(x=[d2x,angleKx,angleD0x],y=[d2y,angleKy,angleD0y],z=[d2z,angleKz,angleD0z],
+            mesh2 = go.Mesh3d(x=[d2x,angleDstx,angleDststx],y=[d2y,angleDsty,angleDststy],z=[d2z,angleDstz,angleDststz],
                     opacity=0.4,
                     color='#3E3A3A')
             traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
-            traceD0=go.Scatter3d(x=[angleBx,angleD0x],y=[angleBy,angleD0y],z=[angleBz,angleD0z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D0'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+            traceDstst=go.Scatter3d(x=[angleBx,angleDststx],y=[angleBy,angleDststy],z=[angleBz,angleDststz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D**'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
             tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
             tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
-            traceK=go.Scatter3d(x=[angleD0x,angleKx],y=[angleD0y,angleKy],z=[angleD0z,angleKz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+            traceDst=go.Scatter3d(x=[angleDststx,angleDstx],y=[angleDststy,angleDsty],z=[angleDststz,angleDstz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D*'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
-            tracepi=go.Scatter3d(x=[angleD0x,anglepix],y=[angleD0y,anglepiy],z=[angleD0z,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+            tracepi=go.Scatter3d(x=[angleDststx,anglepix],y=[angleDststy,anglepiy],z=[angleDststz,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
-            dataangle=[traceQ,traceD0,tracenu,tracetau,traceK,tracepi,dash1,dash2,mesh1,mesh2]
+            dataangle=[traceQ,traceDstst,tracenu,tracetau,traceDst,tracepi,dash1,dash2,mesh1,mesh2]
 
 
 
         else:
-            COM=LorentzVector(df[choice+'_PX_TRUE'],df[choice+'_PY_TRUE'],df[choice+'_PZ_TRUE'],df[choice+'_E_TRUE'])
-            liste_part=change_frame(COM)
-            [newB,newtau,newD0,newnuB,newK,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
-            newW=W.boost(-COM.boostp3)
+		COM=LorentzVector(df[choice+'_PX_TRUE'],df[choice+'_PY_TRUE'],df[choice+'_PZ_TRUE'],df[choice+'_E_TRUE'])
+		liste_part=change_frame(COM)
 
-            if choice=='D0':
-                angleD0x,angleD0y,angleD0z=(0,0,0)
-                angleBx,angleBy,angleBz=(newB.z[i]/newB.p[i],newB.x[i]/newB.p[i],newB.y[i]/newB.p[i])
+		[newB,newW,newDst,newDstst,newD0,newtau,newnuB,newK,newpiDst,newpiDstst,newpiD0,newpitau1,newpitau2,newpitau3,newnutau]=liste_part
 
-
-                angleQx,angleQy,angleQz=(newW.z[i]/newW.p[i]+angleBx,newW.x[i]/newW.p[i]+angleBy,newW.y[i]/newW.p[i]+angleBz)
-
-                d1x,d1y,d1z=(-angleBx,-angleBy,-angleBz)
-                angleKx,angleKy,angleKz=(newK.z[i]/newK.p[i]+angleD0x,newK.x[i]/newK.p[i]+angleD0y,newK.y[i]/newK.p[i]+angleD0z)
-                anglepix,anglepiy,anglepiz=(newpiD0.z[i]/newpiD0.p[i]+angleD0x,newpiD0.x[i]/newpiD0.p[i]+angleD0y,newpiD0.y[i]/newpiD0.p[i]+angleD0z)
-                angletaux,angletauy,angletauz=(angleQx+newtau.z[i]/newtau.p[i],angleQy+newtau.x[i]/newtau.p[i],angleQz+newtau.y[i]/newtau.p[i])
-                anglenux,anglenuy,anglenuz=(angleQx+newnuB.z[i]/newnuB.p[i],angleQy+newnuB.x[i]/newnuB.p[i],angleQz+newnuB.y[i]/newnuB.p[i])
-                traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-
-                traceD0=go.Scatter3d(x=[angleBx,angleD0x],y=[angleBy,angleD0y],z=[angleBz,angleD0z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D0'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                traceK=go.Scatter3d(x=[angleD0x,angleKx],y=[angleD0y,angleKy],z=[angleD0z,angleKz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracepi=go.Scatter3d(x=[angleD0x,anglepix],y=[angleD0y,anglepiy],z=[angleD0z,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+		if choice=='Dstst':
+			angleDststx,angleDststy,angleDststz=(0,0,0)
+			angleBx,angleBy,angleBz=(newB.z[i]/newB.p[i],newB.x[i]/newB.p[i],newB.y[i]/newB.p[i])
 
 
-                dash1=go.Scatter3d(x=[angleD0x,d1x],y=[angleD0y,d1y],z=[angleD0z,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
-                mesh1 = go.Mesh3d(x=[d1x,0,angleKx],y=[d1y,0,angleKy],z=[d1z,0,angleKz],
-                opacity=0.4,
-                color='#3E3A3A')
-                dataangle=[traceQ,traceD0,tracenu,tracetau,traceK,tracepi,dash1,mesh1]
+			angleQx,angleQy,angleQz=(newW.z[i]/newW.p[i]+angleBx,newW.x[i]/newW.p[i]+angleBy,newW.y[i]/newW.p[i]+angleBz)
+
+			d1x,d1y,d1z=(-angleBx,-angleBy,-angleBz)
+			angleDstx,angleDsty,angleDstz=(newDst.z[i]/newDst.p[i]+angleDststx,newDst.x[i]/newDst.p[i]+angleDststy,newDst.y[i]/newDst.p[i]+angleDststz)
+			anglepix,anglepiy,anglepiz=(newpiDstst.z[i]/newpiDstst.p[i]+angleDststx,newpiDstst.x[i]/newpiDstst.p[i]+angleDststy,newpiDstst.y[i]/newpiDstst.p[i]+angleDststz)
+			angletaux,angletauy,angletauz=(angleQx+newtau.z[i]/newtau.p[i],angleQy+newtau.x[i]/newtau.p[i],angleQz+newtau.y[i]/newtau.p[i])
+			anglenux,anglenuy,anglenuz=(angleQx+newnuB.z[i]/newnuB.p[i],angleQy+newnuB.x[i]/newnuB.p[i],angleQz+newnuB.y[i]/newnuB.p[i])
+			traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+
+			traceDstst=go.Scatter3d(x=[angleBx,angleDststx],y=[angleBy,angleDststy],z=[angleBz,angleDststz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D**'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			traceDst=go.Scatter3d(x=[angleDststx,angleDstx],y=[angleDststy,angleDsty],z=[angleDststz,angleDstz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D*'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracepi=go.Scatter3d(x=[angleDststx,anglepix],y=[angleDststy,anglepiy],z=[angleDststz,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
 
-            if choice=='W':
-                angleQx,angleQy,angleQz=(0,0,0)
-                angleBx,angleBy,angleBz=(newB.z[i]/newB.p[i],newB.x[i]/newB.p[i],newB.y[i]/newB.p[i])
-                angleD0x,angleD0y,angleD0z=(newD0.z[i]/newD0.p[i]+angleBx,newD0.x[i]/newD0.p[i]+angleBy,newD0.y[i]/newD0.p[i]+angleBz)
-                angleKx,angleKy,angleKz=(newK.z[i]/newK.p[i]+angleD0x,newK.x[i]/newK.p[i]+angleD0y,newK.y[i]/newK.p[i]+angleD0z)
-
-                anglepix,anglepiy,anglepiz=(newpiD0.z[i]/newpiD0.p[i]+angleD0x,newpiD0.x[i]/newpiD0.p[i]+angleD0y,newpiD0.y[i]/newpiD0.p[i]+angleD0z)
-                angletaux,angletauy,angletauz=(angleQx+newtau.z[i]/newtau.p[i],angleQy+newtau.x[i]/newtau.p[i],angleQz+newtau.y[i]/newtau.p[i])
-                anglenux,anglenuy,anglenuz=(angleQx+newnuB.z[i]/newnuB.p[i],angleQy+newnuB.x[i]/newnuB.p[i],angleQz+newnuB.y[i]/newnuB.p[i])
-                d1x,d1y,d1z=(-angleBx,-angleBy,-angleBz)
-                dash1=go.Scatter3d(x=[angleQx,d1x],y=[angleQy,d1y],z=[angleQz,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
-                traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-
-                traceD0=go.Scatter3d(x=[angleBx,angleD0x],y=[angleBy,angleD0y],z=[angleBz,angleD0z],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D0'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                traceK=go.Scatter3d(x=[angleD0x,angleKx],y=[angleD0y,angleKy],z=[angleD0z,angleKz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'K'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
-                tracepi=go.Scatter3d(x=[angleD0x,anglepix],y=[angleD0y,anglepiy],z=[angleD0z,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			dash1=go.Scatter3d(x=[angleDststx,d1x],y=[angleDststy,d1y],z=[angleDststz,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
+			mesh1 = go.Mesh3d(x=[d1x,0,angleDstx],y=[d1y,0,angleDsty],z=[d1z,0,angleDstz],
+			opacity=0.4,
+			color='#3E3A3A')
+			dataangle=[traceQ,traceDstst,tracenu,tracetau,traceDst,tracepi,dash1,mesh1]
 
 
-                mesh1 = go.Mesh3d(x=[d1x,0,angletaux],y=[d1y,0,angletauy],z=[d1z,0,angletauz],
-                opacity=0.4,
-                color='#3E3A3A')
-                dataangle=[traceQ,traceD0,tracenu,tracetau,traceK,tracepi,dash1,mesh1]
+		if choice=='W':
+			angleQx,angleQy,angleQz=(0,0,0)
+			angleBx,angleBy,angleBz=(newB.z[i]/newB.p[i],newB.x[i]/newB.p[i],newB.y[i]/newB.p[i])
+			angleDststx,angleDststy,angleDststz=(newDstst.z[i]/newDstst.p[i]+angleBx,newDstst.x[i]/newDstst.p[i]+angleBy,newDstst.y[i]/newDstst.p[i]+angleBz)
+			angleDstx,angleDsty,angleDstz=(newDst.z[i]/newDst.p[i]+angleDststx,newDst.x[i]/newDst.p[i]+angleDststy,newDst.y[i]/newDst.p[i]+angleDststz)
 
-    layoutangle = go.Layout(
-                    showlegend=False,
-                    paper_bgcolor = '#F4F4F8',
-                    plot_bgcolor = '#F4F4F8',
-                    autosize=True,
-                    margin=dict(t=10, b=10, l=20, r=10),
-                    scene=dict(
-                    camera=dict(eye=dict(x=1.5,y=1.5,z=1.5)),
-                                                                                                                                       48%
-                    xaxis=dict(
+			anglepix,anglepiy,anglepiz=(newpiDstst.z[i]/newpiDstst.p[i]+angleDststx,newpiDstst.x[i]/newpiDstst.p[i]+angleDststy,newpiDstst.y[i]/newpiDstst.p[i]+angleDststz)
+			angletaux,angletauy,angletauz=(angleQx+newtau.z[i]/newtau.p[i],angleQy+newtau.x[i]/newtau.p[i],angleQz+newtau.y[i]/newtau.p[i])
+			anglenux,anglenuy,anglenuz=(angleQx+newnuB.z[i]/newnuB.p[i],angleQy+newnuB.x[i]/newnuB.p[i],angleQz+newnuB.y[i]/newnuB.p[i])
+			d1x,d1y,d1z=(-angleBx,-angleBy,-angleBz)
+			dash1=go.Scatter3d(x=[angleQx,d1x],y=[angleQy,d1y],z=[angleQz,d1z],mode='lines',line = dict(color = ('rgb(20, 20, 255)'),width = 3,dash='dot'))
+			traceQ=go.Scatter3d(x=[angleBx,angleQx],y=[angleBy,angleQy],z=[angleBz,angleQz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['B', 'W'],textposition='top right',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
-                    title='Z',
-                    titlefont=dict(
-                    family='Arial, sans-serif',
-                    size=18,
-                    color='black'
-                    ),
-                    gridcolor='#bdbdbd',
-                    gridwidth=2,
-                    zerolinecolor='#969696',
-                    zerolinewidth=4,
-                    linecolor='#636363',
-                    linewidth=4,
-                    showbackground=True,
-                    backgroundcolor='rgb(230, 230,230)'
-                    ),
-                    yaxis=dict(
-
-                    title='X',
-                    titlefont=dict(
-                    family='Arial, sans-serif',
-                    size=18,
-                    color='black'
-                    ),
-                    gridcolor='#bdbdbd',
-                    gridwidth=2,
-                    zerolinecolor='#969696',
-                    zerolinewidth=4,
-                    linecolor='#636363',
-                    linewidth=4,
-                    showbackground=True,
-                    backgroundcolor='rgb(230, 230, 230)'
-                    ),
-                    zaxis=dict(
-
-                    title='Y',
-                    titlefont=dict(
-                    family='Arial, sans-serif',
-                    size=18,
-                    color='black'
-                    ),
-            gridcolor='#bdbdbd',
-            gridwidth=2,
-            zerolinecolor='#969696',
-            zerolinewidth=4,
-            linecolor='#636363',
-            linewidth=4,
-
-            showbackground=True,
-            backgroundcolor='rgb(230, 230,230)'
-            ),
-            aspectratio = dict(x=1, y=1, z=0.7),
-            aspectmode = 'manual'
-                    )
-            )
+			traceDstst=go.Scatter3d(x=[angleBx,angleDststx],y=[angleBy,angleDststy],z=[angleBz,angleDststz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D**'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracenu=go.Scatter3d(x=[angleQx,anglenux],y=[angleQy,anglenuy],z=[angleQz,anglenuz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'nu'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracetau=go.Scatter3d(x=[angleQx,angletaux],y=[angleQy,angletauy],z=[angleQz,angletauz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'tau'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			traceK=go.Scatter3d(x=[angleDststx,angleDstx],y=[angleDststy,angleDsty],z=[angleDststz,angleDstz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'D*'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
+			tracepi=go.Scatter3d(x=[angleDststx,anglepix],y=[angleDststy,anglepiy],z=[angleDststz,anglepiz],mode='lines+markers+text',marker=dict(size=5,color= "rgb(5,200,5)", opacity=0.8),text=['', 'pi'],textposition='top left',line = dict(color = ('rgb(0, 0, 255)'),width = 3))
 
 
-    return {'data':dataangle,'layout':layoutangle}
+			mesh1 = go.Mesh3d(x=[d1x,0,angletaux],y=[d1y,0,angletauy],z=[d1z,0,angletauz],
+			opacity=0.4,
+			color='#3E3A3A')
+			dataangle=[traceQ,traceDstst,tracenu,tracetau,traceDst,tracepi,dash1,mesh1]
+
+	layoutangle = go.Layout(
+		    showlegend=False,
+		    paper_bgcolor = '#F4F4F8',
+		    plot_bgcolor = '#F4F4F8',
+		    autosize=True,
+		    margin=dict(t=10, b=10, l=20, r=10),
+		    scene=dict(
+		    camera=dict(eye=dict(x=1.5,y=1.5,z=1.5)),
+
+		    xaxis=dict(
+
+		    title='Z',
+		    titlefont=dict(
+		    family='Arial, sans-serif',
+		    size=18,
+		    color='black'
+		    ),
+		    gridcolor='#bdbdbd',
+		    gridwidth=2,
+		    zerolinecolor='#969696',
+		    zerolinewidth=4,
+		    linecolor='#636363',
+		    linewidth=4,
+		    showbackground=True,
+		    backgroundcolor='rgb(230, 230,230)'
+		    ),
+		    yaxis=dict(
+
+		    title='X',
+		    titlefont=dict(
+		    family='Arial, sans-serif',
+		    size=18,
+		    color='black'
+		    ),
+		    gridcolor='#bdbdbd',
+		    gridwidth=2,
+		    zerolinecolor='#969696',
+		    zerolinewidth=4,
+		    linecolor='#636363',
+		    linewidth=4,
+		    showbackground=True,
+		    backgroundcolor='rgb(230, 230, 230)'
+		    ),
+		    zaxis=dict(
+
+		    title='Y',
+		    titlefont=dict(
+		    family='Arial, sans-serif',
+		    size=18,
+		    color='black'
+		    ),
+	    gridcolor='#bdbdbd',
+	    gridwidth=2,
+	    zerolinecolor='#969696',
+	    zerolinewidth=4,
+	    linecolor='#636363',
+	    linewidth=4,
+
+	    showbackground=True,
+	    backgroundcolor='rgb(230, 230,230)'
+	    ),
+	    aspectratio = dict(x=1, y=1, z=0.7),
+	    aspectmode = 'manual'
+		    )
+	    )
+
+
+	return {'data':dataangle,'layout':layoutangle}
 
 #---------------------------
 #                           |
