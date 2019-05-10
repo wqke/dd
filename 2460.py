@@ -1,7 +1,4 @@
-"""
-Created on Wed Feb 20 18:14:41 2019
-@author: ke
-"""
+#Visualise D2460 Decay
 
 
 from textwrap import dedent as d
